@@ -11,6 +11,8 @@ import Input from '../Input';
 import Button from '../Button';
 import LoadingSpinner from '../LoadingSpinner';
 import UrlList from './UrlList';
+import Backup from './Backup';
+import { DbStatsResponse } from '../../pages/api/admin';
 
 const queryFields = [
   {
@@ -60,13 +62,17 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
   );
 
   // Fetch basic db stats
+  //TODO: Add a refresh button instead
   useEffect(() => {
     const fetchAggregateData = async () => {
       try {
-        const data = await sendRequest(`${BASE_URL}/api/admin`);
+        const data: DbStatsResponse = await sendRequest(
+          `${BASE_URL}/api/admin`
+        );
+        console.log(data);
 
-        if (data?.info) {
-          setCount(data.info.count);
+        if (data?.stats) {
+          setCount(data.stats.count);
         }
       } catch (err) {}
     };
@@ -128,7 +134,7 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
         setUrls(data.urls);
       }
     } catch (err) {
-      setUrls([]);
+      if (urls.length) setUrls([]);
     }
   };
 
@@ -247,6 +253,10 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
         </>
       ) : null}
 
+      <div className="dangerous">
+        <Backup />
+      </div>
+
       <style jsx>
         {`
           .dashboard {
@@ -314,6 +324,10 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
           }
           .controls.disabled {
             border-color: var(--danger);
+          }
+          .dangerous {
+            border: 1px solid var(--danger);
+            margin-top: 2rem;
           }
 
           @media screen and (min-width: 576px) {

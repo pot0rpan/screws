@@ -5,7 +5,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<Props> = ({
-  primary,
+  primary = true,
   children,
   ...buttonAttributes
 }) => {
@@ -15,7 +15,7 @@ const Button: React.FC<Props> = ({
       <style jsx>
         {`
           button {
-            --color: var(--primary);
+            --color: var(--danger);
             background-color: transparent;
             border: var(--border-width) solid var(--color);
             color: var(--color);
@@ -24,8 +24,15 @@ const Button: React.FC<Props> = ({
             padding: 0.75em;
             text-transform: uppercase;
           }
+          button.primary {
+            --color: var(--primary);
+          }
           button:disabled {
             --color: var(--danger);
+            opacity: 0.8;
+          }
+          button.primary:disabled {
+            opacity: 1;
           }
           button:not(:disabled):hover,
           button:not(:disabled):focus {

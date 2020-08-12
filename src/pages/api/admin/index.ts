@@ -1,6 +1,11 @@
 import { NextApiResponse } from 'next';
 import nextConnect, { NextHandler } from 'next-connect';
-import { Collection, Cursor, DeleteWriteOpResultObject } from 'mongodb';
+import {
+  Collection,
+  Cursor,
+  DeleteWriteOpResultObject,
+  CollStats,
+} from 'mongodb';
 
 import { UrlDbObjectType, UrlClientObjectType } from '../../../types/url';
 import { URL_COLLECTION_NAME } from '../../../config';
@@ -13,6 +18,17 @@ const handler = nextConnect();
 handler.use(authMiddleware);
 handler.use(dbMiddleware);
 
+export interface DbStatsResponse {
+  stats: {
+    ok: boolean;
+    name: string;
+    count: number;
+    size: number;
+    storageSize: number;
+    avgObjSize: number;
+  };
+}
+
 // Get basic aggregate info about urls db
 handler.get(
   async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
@@ -21,8 +37,18 @@ handler.get(
     );
 
     try {
-      const count = await Url.estimatedDocumentCount();
-      return res.json({ info: { count } });
+      const statsRes: CollStats = await Url.stats();
+
+      const stats: DbStatsResponse['stats'] = {
+        ok: statsRes.ok === 1,
+        name: statsRes.ns,
+        count: statsRes.count,
+        size: statsRes.size,
+        storageSize: statsRes.storageSize,
+        avgObjSize: statsRes.avgObjSize,
+      };
+
+      return res.json({ stats });
     } catch (err) {
       return res.status(500).json({ message: 'Could not fetch database info' });
     }
