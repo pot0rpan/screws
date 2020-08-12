@@ -61,24 +61,21 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
     false
   );
 
-  // Fetch basic db stats
-  //TODO: Add a refresh button instead
+  // Fetch basic db stats on page load
   useEffect(() => {
-    const fetchAggregateData = async () => {
-      try {
-        const data: DbStatsResponse = await sendRequest(
-          `${BASE_URL}/api/admin`
-        );
-        console.log(data);
-
-        if (data?.stats) {
-          setCount(data.stats.count);
-        }
-      } catch (err) {}
-    };
-
     fetchAggregateData();
-  }, [urls]);
+  }, []);
+
+  const fetchAggregateData = async () => {
+    try {
+      const data: DbStatsResponse = await sendRequest(`${BASE_URL}/api/admin`);
+      console.log(data);
+
+      if (data?.stats) {
+        setCount(data.stats.count);
+      }
+    } catch (err) {}
+  };
 
   const submitQueryHandler = async (e: React.FormEvent) => {
     const query = formState.inputs.query.value;
@@ -167,6 +164,7 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
           lastUrls.filter((u) => !selectedCodes.includes(u.code))
         );
         setSelectedCodes([]);
+        fetchAggregateData();
       }
     } catch (err) {}
   };
@@ -193,10 +191,13 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
       </div>
 
       <div className="details">
-        <h3>
+        <p>
           There are <span className="accent">{count > -1 ? count : '?'}</span>{' '}
           total URLs in the database
-        </h3>
+        </p>
+        <div className="button">
+          <Button onClick={fetchAggregateData}>Refresh</Button>
+        </div>
       </div>
 
       <form onSubmit={submitQueryHandler}>
@@ -306,6 +307,21 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             margin: 1rem;
             text-align: center;
           }
+          .details {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+          }
+          .details p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0;
+          }
+          .details .button {
+            margin: 0.5rem;
+            font-size: 0.8rem;
+          }
           .dashboard form {
             max-width: 100%;
             position: relative;
@@ -345,6 +361,14 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             }
             #user #sign-out {
               margin-left: auto;
+            }
+            .details {
+              flex-direction: row;
+              padding: 1rem 0;
+            }
+            .details p {
+              margin: 0;
+              text-align: left;
             }
           }
         `}
