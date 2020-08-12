@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'Louis George Cafe';
+  font-display: swap;
+  src: local('LouisGeorge Cafe'),
+    url(./assets/LouisGeorgeCafe.ttf) format('truetype');
+}
+
+:root {
+  --bg: #150322;
+  --bg-light: #391d4d;
+  --bg-lighter: #4a2e5f;
+  --text: #fbf5ff;
+  --text-muted: #edd3ff;
+  --text-placeholder: #5f5269;
+  --primary: #00e2bc;
+  --primary-muted: #00e2bcd4;
+  --danger: #fa0085;
+  --border-width: 8px;
+}
+
+::selection {
+  background-color: var(--danger);
+  color: var(--bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  font-family: inherit;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  box-sizing: border-box;
+  color: var(--text);
+  font-family: 'Louis George Cafe', Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.25;
+}
+
+p {
+  line-height: 1.4;
+}
+
+h1 {
+  font-size: 3rem;
+  margin: 1rem 0;
+}
+
+h2 {
+  margin: 0.75rem 0;
+  font-size: 2.2rem;
+}
+
+a {
+  color: inherit;
+}
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.accent {
+  color: var(--primary);
+}
