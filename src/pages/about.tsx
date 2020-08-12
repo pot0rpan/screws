@@ -141,7 +141,9 @@ const About: NextPage = () => {
           <p>
             The full source code for this website is{' '}
             <span className="accent">
-              <a href="https://github.com/dczysz/screws">available on GitHub</a>
+              <a href="https://github.com/pot0rpan/screws">
+                available on GitHub
+              </a>
             </span>
             . This allows you to look over the code as well as host your own
             version of {WEBSITE_NAME}. The README file has detailed instructions
