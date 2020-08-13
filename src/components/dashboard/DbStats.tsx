@@ -9,7 +9,7 @@ const DbStats: React.FC<Props> = ({ stats }) => {
     <div className="stats">
       <p className="row">
         <span>Total number of URLs:</span>
-        <span className="accent">{stats?.count > -1 ? stats?.count : '?'}</span>
+        <span className="accent">{stats.count > -1 ? stats?.count : '?'}</span>
       </p>
 
       <p className="row">
@@ -22,15 +22,19 @@ const DbStats: React.FC<Props> = ({ stats }) => {
       </p>
       <p className="row">
         <span>Database usage:</span>
-        <span className="accent">{stats.size} B</span>
+        <span className="accent">{stats.size > -1 ? stats.size : '?'} B</span>
       </p>
       <p className="row">
         <span>Database total size:</span>
-        <span className="accent">{stats.storageSize} B</span>
+        <span className="accent">
+          {stats.storageSize > -1 ? stats.storageSize : '?'} B
+        </span>
       </p>
       <p className="row">
         <span>Average object size:</span>
-        <span className="accent">{stats.avgObjSize} B</span>
+        <span className="accent">
+          {stats.avgObjSize > -1 ? stats.avgObjSize : '?'} B
+        </span>
       </p>
 
       <style jsx>
