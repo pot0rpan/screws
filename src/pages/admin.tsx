@@ -5,7 +5,7 @@ import { SessionType, AdminUserType } from '../types/auth';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
-import Dashboard from '../components/dashboard/Dashboard';
+import Dashboard from '../components/admin/Dashboard';
 
 const AdminPage: NextPage = () => {
   const [session, loading]: [SessionType, boolean] = useSession();
