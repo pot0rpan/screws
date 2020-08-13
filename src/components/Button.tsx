@@ -31,9 +31,6 @@ const Button: React.FC<Props> = ({
             --color: var(--danger);
             opacity: 0.8;
           }
-          button.primary:disabled {
-            opacity: 1;
-          }
           button:not(:disabled):hover,
           button:not(:disabled):focus {
             background-color: var(--color);

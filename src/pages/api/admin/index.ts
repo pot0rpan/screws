@@ -19,14 +19,16 @@ handler.use(authMiddleware);
 handler.use(dbMiddleware);
 
 export interface DbStatsResponse {
-  stats: {
-    ok: boolean;
-    name: string;
-    count: number;
-    size: number;
-    storageSize: number;
-    avgObjSize: number;
-  };
+  stats: DbStatsType;
+}
+
+export interface DbStatsType {
+  ok: boolean;
+  name: string;
+  count: number;
+  size: number;
+  storageSize: number;
+  avgObjSize: number;
 }
 
 // Get basic aggregate info about urls db

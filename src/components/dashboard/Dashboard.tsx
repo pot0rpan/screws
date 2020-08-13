@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { AdminUserType } from '../../types/auth';
 import { UrlClientObjectType } from '../../types/url';
+import { DbStatsResponse, DbStatsType } from '../../pages/api/admin';
 import { BASE_URL } from '../../config';
 import { addUrlProtocolIfMissing } from '../../utils/urls';
 import { VALIDATOR_REQUIRE } from '../../utils/validators';
@@ -12,7 +13,7 @@ import Button from '../Button';
 import LoadingSpinner from '../LoadingSpinner';
 import UrlList from './UrlList';
 import Backup from './Backup';
-import { DbStatsResponse } from '../../pages/api/admin';
+import DbStats from './DbStats';
 
 const queryFields = [
   {
@@ -46,7 +47,14 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
   const { sendRequest, isLoading, error, clearError } = useHttpClient();
   const [urls, setUrls] = useState<UrlClientObjectType[]>([]);
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
-  const [count, setCount] = useState<number>(-1);
+  const [dbStats, setDbStats] = useState<DbStatsType>({
+    ok: false,
+    name: '?.?',
+    count: -1,
+    size: -1,
+    storageSize: -1,
+    avgObjSize: -1,
+  });
   const [formState, inputHandler] = useForm(
     {
       field: {
@@ -69,10 +77,9 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
   const fetchAggregateData = async () => {
     try {
       const data: DbStatsResponse = await sendRequest(`${BASE_URL}/api/admin`);
-      console.log(data);
 
       if (data?.stats) {
-        setCount(data.stats.count);
+        setDbStats(data.stats);
       }
     } catch (err) {}
   };
@@ -185,18 +192,12 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             <p className="discriminator">#{user.discriminator}</p>
           </div>
         </div>
-        <div id="sign-out">
-          <Button onClick={signOut}>Sign out</Button>
-        </div>
-      </div>
-
-      <div className="details">
-        <p>
-          There are <span className="accent">{count > -1 ? count : '?'}</span>{' '}
-          total URLs in the database
-        </p>
-        <div className="button">
+        <DbStats stats={dbStats} />
+        <div className="buttons">
           <Button onClick={fetchAggregateData}>Refresh</Button>
+          <Button primary={false} onClick={signOut}>
+            Sign out
+          </Button>
         </div>
       </div>
 
@@ -273,12 +274,15 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             flex-direction: column;
             justify-content: center;
             margin-bottom: 1rem;
+            max-width: 20rem;
             padding: 1rem;
+            width: 100%;
           }
           #user .content {
             align-items: center;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             width: 100%;
           }
           #user img {
@@ -299,28 +303,16 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             margin: 0;
             margin-top: 0.25rem;
           }
-          #user #sign-out {
+          #user .buttons {
+            display: flex;
             font-size: 0.5rem;
+            justify-content: space-between;
             margin-top: 1rem;
+            width: 100%;
           }
           .button {
             margin: 1rem;
             text-align: center;
-          }
-          .details {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-          }
-          .details p {
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 0;
-          }
-          .details .button {
-            margin: 0.5rem;
-            font-size: 0.8rem;
           }
           .dashboard form {
             max-width: 100%;
@@ -361,14 +353,6 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             }
             #user #sign-out {
               margin-left: auto;
-            }
-            .details {
-              flex-direction: row;
-              padding: 1rem 0;
-            }
-            .details p {
-              margin: 0;
-              text-align: left;
             }
           }
         `}
