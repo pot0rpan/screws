@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project to create a URL shortening service, using Mongo DB.
+# [Scre.ws](https://scre.ws)
+
+Screws is a URL shortening service made with Next.js and Mongo DB.
 
 ## Getting Started
 
