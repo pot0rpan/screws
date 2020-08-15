@@ -77,6 +77,8 @@ const Page: NextPage<Props> = ({ code, url, passwordRequired }) => {
             ? undefined
             : `Landing page for redirect to ${url.longUrl}`
         }
+        ogImage={url.preview?.image?.url}
+        ogUrl={`${BASE_URL}/${url.code}`}
       >
         <RedirectInfo url={url} />
       </Layout>
