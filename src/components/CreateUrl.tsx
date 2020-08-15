@@ -41,6 +41,7 @@ export const expirationOptions = [
 const CreateUrl: React.FC = () => {
   const { urls, addUrl } = useContext(UrlsContext);
   const [userError, setUserError] = useState<string | null>(null);
+  const [optionsExpanded, setOptionsExpanded] = useState(false);
   const {
     sendRequest,
     isLoading,
@@ -102,7 +103,11 @@ const CreateUrl: React.FC = () => {
 
       return (
         isDuplicateCode ||
-        (isRandomCode && isDuplicateUrl && hasNoExpiration && hasNoPassword)
+        (isRandomCode &&
+          url.isRandomCode &&
+          isDuplicateUrl &&
+          hasNoExpiration &&
+          hasNoPassword)
       );
     }).length;
 
@@ -133,58 +138,77 @@ const CreateUrl: React.FC = () => {
     } catch (err) {}
   };
 
+  const handleToggleAdvancedOptions = () => {
+    setOptionsExpanded((current) => !current);
+  };
+
   return (
     <div className="container">
       <div className="shortener">
         <h2>Shorten a URL</h2>
         <form onSubmit={submitHandler}>
-          <Input
-            id="url"
-            element="input"
-            onInput={inputHandler}
-            label="URL to shorten"
-            placeholder="example.com/long-url"
-            validators={[VALIDATOR_REQUIRE(), VALIDATOR_URL()]}
-            errorText="Please enter a valid URL"
-            inputMode="url"
-            autoCorrect="off"
-            autoCapitalize="none"
-            autoFocus
-          />
-          <Input
-            id="code"
-            element="input"
-            onInput={inputHandler}
-            label="Code (optional)"
-            placeholder="my-cool-url"
-            validators={[VALIDATOR_MAXLENGTH(24), VALIDATOR_SAFECODE()]}
-            errorText="Code has a limit of 24 characters, and `-` is the only symbol allowed"
-            initialValidity={true}
-            autoCorrect="off"
-            autoCapitalize="none"
-          />
+          <div className="inputs">
+            <div>
+              <Input
+                id="url"
+                element="input"
+                onInput={inputHandler}
+                label="URL to shorten"
+                placeholder="example.com/long-url"
+                validators={[VALIDATOR_REQUIRE(), VALIDATOR_URL()]}
+                errorText="Please enter a valid URL"
+                inputMode="url"
+                autoCorrect="off"
+                autoCapitalize="none"
+              />
+              <Input
+                id="code"
+                element="input"
+                onInput={inputHandler}
+                label="Code (optional)"
+                placeholder="my-cool-url"
+                validators={[VALIDATOR_MAXLENGTH(24), VALIDATOR_SAFECODE()]}
+                errorText="Code has a limit of 24 characters, and `-` is the only symbol allowed"
+                initialValidity={true}
+                autoCorrect="off"
+                autoCapitalize="none"
+              />
 
-          {httpError && <small>{httpError}</small>}
+              {httpError && <small>{httpError}</small>}
+              {userError && <small>{userError}</small>}
+            </div>
 
-          <Input
-            id="expiration"
-            element="select"
-            onInput={inputHandler}
-            label="Expiration"
-            initialValidity={true}
-            initialValue={expirationOptions[0].value.toString()}
-            options={expirationOptions}
-          />
-          <Input
-            id="password"
-            element="input"
-            onInput={inputHandler}
-            label="Password (optional)"
-            initialValidity={true}
-            type="password"
-          />
-
-          {userError && <small>{userError}</small>}
+            <div className="advanced">
+              <p className="control accent">
+                <button
+                  type="button"
+                  onClick={handleToggleAdvancedOptions}
+                  aria-expanded={optionsExpanded}
+                >
+                  {optionsExpanded ? 'Hide' : 'Show'} advanced options
+                </button>
+              </p>
+              <div className={`content ${optionsExpanded ? 'show' : ''}`}>
+                <Input
+                  id="expiration"
+                  element="select"
+                  onInput={inputHandler}
+                  label="Expiration (optional)"
+                  initialValidity={true}
+                  initialValue={expirationOptions[0].value.toString()}
+                  options={expirationOptions}
+                />
+                <Input
+                  id="password"
+                  element="input"
+                  onInput={inputHandler}
+                  label="Password (optional)"
+                  initialValidity={true}
+                  type="password"
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="button">
             <Button type="submit" disabled={!formState.isValid}>
@@ -227,10 +251,9 @@ const CreateUrl: React.FC = () => {
           }
           .shortener h2 {
             margin-top: 0;
+            text-align: center;
           }
           .shortener form {
-            display: flex;
-            flex-direction: column;
             max-width: 400px;
             padding: 0 1rem;
             position: relative;
@@ -239,6 +262,32 @@ const CreateUrl: React.FC = () => {
           .shortener form small {
             color: var(--danger);
             font-weight: bold;
+          }
+          .shortener form .inputs {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+          .shortener form .inputs > div {
+            width: 100%;
+          }
+          .advanced .control {
+            margin: 0;
+            margin-bottom: 0.25rem;
+          }
+          .advanced button {
+            all: inherit;
+            cursor: pointer;
+          }
+          .advanced button:focus,
+          .advanced button:hover {
+            text-decoration: underline;
+          }
+          .advanced .content {
+            display: none;
+          }
+          .advanced .content.show {
+            display: block;
           }
           .expiration {
             --size: 2.5rem;
@@ -275,6 +324,24 @@ const CreateUrl: React.FC = () => {
             margin: 0.5rem;
             max-width: 100%;
             width: 22rem;
+          }
+
+          @media screen and (min-width: 768px) {
+            .shortener form {
+              max-width: 800px;
+            }
+            .shortener form .inputs {
+              flex-direction: row;
+            }
+            .advanced {
+              margin-left: 1.5rem;
+            }
+            .advanced .control {
+              display: none;
+            }
+            .advanced .content {
+              display: block;
+            }
           }
         `}
       </style>
