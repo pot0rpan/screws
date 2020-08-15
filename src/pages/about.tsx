@@ -6,6 +6,7 @@ import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { useCookies } from '../hooks/cookie-hook';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
+import cookies from 'next-cookies';
 
 const exampleData = [
   {
@@ -55,9 +56,9 @@ const About: NextPage = () => {
 
   return (
     <Layout title="/about">
-      <div className="container">
-        <h1>About {WEBSITE_NAME}</h1>
-        <div>
+      <article>
+        <section>
+          <h1>About {WEBSITE_NAME}</h1>
           <p>
             Screws is an open source URL shortening service centered around link
             clickers instead of the link creators. Most URL shortening services
@@ -76,12 +77,12 @@ const About: NextPage = () => {
             systems, and geo location of people who click on the links, you only
             get basic information about the full URL.
           </p>
-        </div>
+        </section>
 
-        <a href="#privacy">
-          <h2>What information does {WEBSITE_NAME} collect?</h2>
-        </a>
-        <div>
+        <section>
+          <a href="#privacy">
+            <h2>What information does {WEBSITE_NAME} collect?</h2>
+          </a>
           <p>
             None! Well, almost. {WEBSITE_NAME} never keeps track of anything
             that can be linked back to you in any way. Below is a full list of
@@ -109,12 +110,12 @@ const About: NextPage = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </section>
 
-        <a href="#cookies">
-          <h2>Cookies</h2>
-        </a>
-        <div className="cookies">
+        <section className="cookies">
+          <a href="#cookies">
+            <h2>Cookies</h2>
+          </a>
           <p>
             Screws will never save any tracking or personal data in cookies. A
             single cookie is stored if you choose to opt out of seeing the
@@ -123,21 +124,23 @@ const About: NextPage = () => {
           </p>
           <p>
             This cookie is automatically deleted 30 days after it is set or when
-            you clear your browser's cookie data. If you would like to delete
-            this cookie now, you may click the button below.
+            you clear your browser's cookies.{' '}
+            {cookiesEnabled
+              ? 'If you would like to delete this cookie now, you may click the button below.'
+              : 'There are no cookies currently set for you.'}
           </p>
 
-          <div className="button">
-            <Button onClick={handleRemoveCookie} disabled={!cookiesEnabled}>
-              {cookiesEnabled ? 'Clear Cookie Data' : 'No cookies saved'}
-            </Button>
-          </div>
-        </div>
+          {cookiesEnabled ? (
+            <div className="button">
+              <Button onClick={handleRemoveCookie}>Clear Cookie Data</Button>
+            </div>
+          ) : null}
+        </section>
 
-        <a href="#github">
-          <h2>Souce Code</h2>
-        </a>
-        <div className="github">
+        <section className="github">
+          <a href="#github">
+            <h2>Souce Code</h2>
+          </a>
           <p>
             The full source code for this website is{' '}
             <span className="accent">
@@ -151,50 +154,50 @@ const About: NextPage = () => {
             Feel free to star, fork, or make a pull request to the repository,
             it would all be greatly appreciated!
           </p>
-        </div>
-      </div>
+        </section>
+      </article>
       <style jsx>
         {`
-          .container {
+          article {
             padding: 0 1rem;
             margin: 0 auto;
             max-width: 800px;
           }
-          .container h1,
-          .container h2 {
+          article h1,
+          article h2 {
             text-align: center;
           }
-          .container h2 {
+          article h2 {
             margin: 3rem auto 1rem auto;
           }
-          .container > a {
-            text-decoration: none;
+          section > a {
             cursor: text;
+            text-decoration: none;
           }
-          .container ul {
+          article ul {
+            display: flex;
+            flex-direction: column;
             list-style: none;
             margin: 0;
             margin-top: 1rem;
             padding: 0;
-            display: flex;
-            flex-direction: column;
           }
-          .container li {
+          article li {
             display: flex;
             flex-direction: column;
-            position: relative;
             margin-left: 2rem;
             margin-top: 1rem;
+            position: relative;
           }
-          .container li::before {
-            content: '';
-            position: absolute;
-            height: 100%;
-            width: 0.2rem;
-            left: -1rem;
+          article li::before {
             background: var(--primary-muted);
+            content: '';
+            height: 100%;
+            left: -1rem;
+            position: absolute;
+            width: 0.2rem;
           }
-          .container li b {
+          article li b {
             margin-bottom: 0.25rem;
           }
           .cookies .button {
