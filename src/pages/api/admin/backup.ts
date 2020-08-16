@@ -11,7 +11,7 @@ const handler = nextConnect();
 handler.use(authMiddleware);
 handler.use(dbMiddleware);
 
-// Get basic aggregate info about urls db
+// Get full database backup in JSON
 handler.get(
   async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
     console.log('ADMIN DOWNLOADING DATABASE BACKUP');
@@ -20,8 +20,7 @@ handler.get(
       URL_COLLECTION_NAME
     );
 
-    // Find matching urls in db
-    // https://docs.mongodb.com/drivers/node/usage-examples/find
+    // Get all urls in db in order of creation
     let cursor: Cursor<UrlDbObjectType>;
     try {
       const options = { sort: { date: 1 } };
