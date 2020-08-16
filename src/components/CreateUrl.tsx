@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_URL,
+  VALIDATOR_MINLENGTH,
   VALIDATOR_MAXLENGTH,
   VALIDATOR_SAFECODE,
 } from '../utils/validators';
@@ -167,8 +168,12 @@ const CreateUrl: React.FC = () => {
                 onInput={inputHandler}
                 label="Code (optional)"
                 placeholder="my-cool-url"
-                validators={[VALIDATOR_MAXLENGTH(24), VALIDATOR_SAFECODE()]}
-                errorText="Code has a limit of 24 characters, and `-` is the only symbol allowed"
+                validators={[
+                  VALIDATOR_MINLENGTH(4),
+                  VALIDATOR_MAXLENGTH(32),
+                  VALIDATOR_SAFECODE(),
+                ]}
+                errorText="Must be 4-32 characters, and `-` is the only symbol allowed"
                 initialValidity={true}
                 autoCorrect="off"
                 autoCapitalize="none"

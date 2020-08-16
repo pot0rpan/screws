@@ -11,7 +11,7 @@ import {
   UrlDbObjectType,
   UrlClientObjectType,
 } from '../../../types/url';
-import { URL_COLLECTION_NAME, USE_FULL_WORDS, BASE_URL } from '../../../config';
+import { URL_COLLECTION_NAME, USE_FULL_WORDS } from '../../../config';
 import { defaultRateLimitOptions } from '../../../config/rate-limit';
 import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
 import { MILLISECONDS_PER_HOUR } from '../../../utils/time';
@@ -19,6 +19,7 @@ import { expirationOptions } from '../../../components/CreateUrl';
 import {
   validate,
   VALIDATOR_URL,
+  VALIDATOR_MINLENGTH,
   VALIDATOR_MAXLENGTH,
   VALIDATOR_SAFECODE,
 } from '../../../utils/validators';
@@ -55,7 +56,11 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
   const isValidInput =
     validate(longUrl, [VALIDATOR_URL()]) &&
     (code
-      ? validate(code, [VALIDATOR_MAXLENGTH(24), VALIDATOR_SAFECODE()])
+      ? validate(code, [
+          VALIDATOR_MINLENGTH(4),
+          VALIDATOR_MAXLENGTH(24),
+          VALIDATOR_SAFECODE(),
+        ])
       : true) &&
     expirationOptions.map((exp) => exp.value).includes(expirationHours);
 
