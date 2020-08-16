@@ -172,6 +172,7 @@ const Input: React.FC<Props> = ({
           onChange={changeHandler}
           ref={inputRef}
           autoFocus={autoFocus}
+          defaultValue={initialValue}
         >
           {options.map((opt) => (
             <option id={opt.value} value={opt.value} key={opt.value}>

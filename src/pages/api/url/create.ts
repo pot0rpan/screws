@@ -83,6 +83,7 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
         const clientSafeUrlObject: UrlClientObjectType = {
           ...existingUrl,
           password: !!existingUrl.password,
+          flags: existingUrl.flags?.length || 0,
         };
         return res.json({ url: clientSafeUrlObject });
       }

@@ -79,6 +79,7 @@ handler.use(
           const clientSafeUrlObject: UrlClientObjectType = {
             ...url,
             password: !!url.password,
+            flags: url.flags?.length || 0,
           };
           return res.json({ url: clientSafeUrlObject });
         }

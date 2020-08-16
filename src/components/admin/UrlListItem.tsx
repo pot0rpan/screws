@@ -16,6 +16,7 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
           <th>
             <input type="checkbox" checked={selected} onChange={onSelect} />
           </th>
+          <th>Flags</th>
           <th>Code</th>
           <th>Long URL</th>
           <th>Created at</th>
@@ -34,15 +35,14 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
               onChange={onSelect}
             />
           </td>
+          <td>{url.flags || 0}</td>
           <td>
             <Link href={`/${url.code}`}>
               <a>/{url.code}</a>
             </Link>
           </td>
           <td>
-            <Link href={url.longUrl}>
-              <a>{url.longUrl}</a>
-            </Link>
+            <a href={url.longUrl}>{url.longUrl}</a>
           </td>
           <td>{new Date(url.date).toLocaleDateString()}</td>
           <td

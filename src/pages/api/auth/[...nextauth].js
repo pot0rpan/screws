@@ -59,15 +59,16 @@ const options = {
       //! Remove once next-auth updates URL
       profileUrl: 'https://discord.com/api/users/@me',
 
-      // Custom profile to remove email and add discriminator
-      // But `name`, `email`, and `image` are only values allowed
+      // Custom profile to remove email and add id and discriminator
+      // But `name`, `email`, and `image` are only values saved
       // per _getProfile() in next-auth/lib/oauth/callback.js
-      // So discriminator is saved under email for now ¯\_(ツ)_/¯
+      // So <username>#<discriminator> is saved under `name`,
+      // and <id> is saved under `email` for now ¯\_(ツ)_/¯
       profile: (profile) => {
         return {
           id: profile.id,
-          name: profile.username,
-          email: profile.discriminator,
+          name: `${profile.username}#${profile.discriminator}`,
+          email: profile.id,
           image: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
         };
       },

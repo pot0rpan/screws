@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 
 import { AdminUserType } from '../../types/auth';
 import { UrlClientObjectType } from '../../types/url';
-import { DbStatsResponse, DbStatsType } from '../../pages/api/admin';
-import { BASE_URL } from '../../config';
+import {
+  DbStatsResponse,
+  DbStatsType,
+  DeleteResponse,
+} from '../../pages/api/admin';
+import { BASE_URL, DELETE_FLAG_THRESHOLD } from '../../config';
 import { addUrlProtocolIfMissing } from '../../utils/urls';
 import { VALIDATOR_REQUIRE } from '../../utils/validators';
 import { useForm } from '../../hooks/form-hook';
@@ -33,6 +37,10 @@ const queryFields = [
     label: 'Expiration date',
   },
   {
+    value: 'flags',
+    label: 'Number of flags',
+  },
+  {
     value: 'id',
     label: 'ID',
   },
@@ -58,20 +66,24 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
   const [formState, inputHandler] = useForm(
     {
       field: {
-        value: queryFields[0].value,
+        value: 'date',
         isValid: true,
       },
       query: {
-        value: '',
-        isValid: false,
+        value: '> 0',
+        isValid: true,
       },
     },
-    false
+    true
   );
 
-  // Fetch basic db stats on page load
+  const userName = user.name.split('#')[0];
+  const userDiscriminator = user.name.split('#')[1];
+
+  // Fetch basic db stats and query on page load
   useEffect(() => {
     fetchAggregateData();
+    submitQueryHandler();
   }, []);
 
   const fetchAggregateData = async () => {
@@ -84,12 +96,12 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
     } catch (err) {}
   };
 
-  const submitQueryHandler = async (e: React.FormEvent) => {
+  const submitQueryHandler = async (e?: React.FormEvent) => {
     const query = formState.inputs.query.value;
     const field = formState.inputs.field.value;
-    let fixedQuery: object | string | null = query;
+    let fixedQuery: object | string | null = query.trim();
 
-    e.preventDefault();
+    e?.preventDefault();
     clearError();
     if (!formState.isValid) return;
 
@@ -110,11 +122,16 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
       } else {
         fixedQuery = { $gt: num };
       }
-    } else if (query === 'null') {
-      // Fix `null` query
+    } else if (['expiration'].includes(field) && query === 'null') {
       fixedQuery = null;
     } else if (field === 'longUrl') {
       fixedQuery = addUrlProtocolIfMissing(query);
+    } else if (field === 'flags') {
+      if (query === '0') {
+        fixedQuery = { $not: { $exists: 'flags' } };
+      } else {
+        fixedQuery = { $size: parseInt(query) };
+      }
     }
 
     const reqBody = {
@@ -144,20 +161,23 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
 
   const handleDelete = async () => {
     if (!selectedCodes.length) return;
+    if (error) clearError();
 
     // Confirm deletion
     if (
       !confirm(
-        `Delete ${selectedCodes.length} URL${
+        `Flag ${selectedCodes.length} URL${
           selectedCodes.length === 1 ? '' : 's'
-        }?\nTHIS ACTION CAN NOT BE UNDONE.`
+        } for deletion?
+URLs will be deleted after accumulating ${DELETE_FLAG_THRESHOLD} flags.
+THIS ACTION CAN NOT BE UNDONE.`
       )
     ) {
       return;
     }
 
     try {
-      const { success, count } = await sendRequest(
+      const { success, flagged, deleted }: DeleteResponse = await sendRequest(
         `${BASE_URL}/api/admin`,
         'DELETE',
         JSON.stringify({ codes: selectedCodes }),
@@ -166,12 +186,13 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
         }
       );
 
-      if (success) {
-        setUrls((lastUrls) =>
-          lastUrls.filter((u) => !selectedCodes.includes(u.code))
-        );
+      // Reset stuff if successful
+      if (success && (flagged.length || deleted.length)) {
         setSelectedCodes([]);
+
+        // Fetch updated stats and query results
         fetchAggregateData();
+        submitQueryHandler();
       }
     } catch (err) {}
   };
@@ -188,8 +209,8 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             alt="Your Discord user avatar"
           />
           <div>
-            <p className="name">{user.name}</p>
-            <p className="discriminator">#{user.discriminator}</p>
+            <p className="name">{userName}</p>
+            <p className="discriminator">#{userDiscriminator}</p>
           </div>
         </div>
         <DbStats stats={dbStats} />
@@ -211,7 +232,7 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
           errorText="Please select a valid query type"
           options={queryFields}
           initialValidity={true}
-          initialValue={queryFields[0].value.toString()}
+          initialValue={formState.inputs.field.value}
         />
         <Input
           id="query"
@@ -221,6 +242,8 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
           type="search"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a search query"
+          initialValidity={true}
+          initialValue={formState.inputs.query.value}
         />
 
         {error ? (
@@ -244,7 +267,7 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
             className={`controls ${selectedCodes.length < 1 ? 'disabled' : ''}`}
           >
             <Button onClick={handleDelete} disabled={selectedCodes.length < 1}>
-              Delete
+              Flag for deletion
             </Button>
           </div>
           <UrlList

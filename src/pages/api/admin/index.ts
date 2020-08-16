@@ -4,15 +4,16 @@ import {
   Collection,
   Cursor,
   DeleteWriteOpResultObject,
+  UpdateWriteOpResult,
   CollStats,
 } from 'mongodb';
 
 import { UrlDbObjectType, UrlClientObjectType } from '../../../types/url';
-import { URL_COLLECTION_NAME } from '../../../config';
-import authMiddleware from '../../../middlewares/auth';
+import { URL_COLLECTION_NAME, DELETE_FLAG_THRESHOLD } from '../../../config';
+import authMiddleware, { AuthSessionRequest } from '../../../middlewares/auth';
 import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
 
-const queryFields = ['id', 'code', 'date', 'expiration', 'longUrl'];
+const queryFields = ['id', 'code', 'date', 'expiration', 'longUrl', 'flags'];
 
 const handler = nextConnect();
 handler.use(authMiddleware);
@@ -67,7 +68,7 @@ handler.post(
   async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
     const { query, field }: PostRequestBody = req.body;
 
-    console.log('ADMIN QUERY:\n', req.body);
+    console.log('ADMIN QUERY:\n', JSON.stringify(req.body));
 
     // Verify inputs to use for query
     if ((!query && query !== null) || !field || !queryFields.includes(field)) {
@@ -96,6 +97,7 @@ handler.post(
     const urls: UrlClientObjectType[] = (await cursor.toArray()).map((url) => ({
       ...url,
       password: !!url.password,
+      flags: url.flags?.length || 0,
     }));
 
     // Send to client if found
@@ -103,13 +105,22 @@ handler.post(
   }
 );
 
+interface DeleteRequest extends DatabaseRequest, AuthSessionRequest {}
+
 interface DeleteRequestBody {
   codes: string[];
 }
 
+export interface DeleteResponse {
+  success: boolean;
+  flagged: string[];
+  deleted: string[];
+}
+
 handler.delete(
-  async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
+  async (req: DeleteRequest, res: NextApiResponse, _next: NextHandler) => {
     const { codes }: DeleteRequestBody = req.body;
+    const { session } = req;
 
     if (!codes.length) {
       return res
@@ -121,22 +132,93 @@ handler.delete(
       URL_COLLECTION_NAME
     );
 
-    let result: DeleteWriteOpResultObject;
+    // Find urls matching codes
+    let foundUrls: UrlDbObjectType[];
     try {
-      result = await Url.deleteMany({ code: { $in: codes } });
+      const queryResult = Url.find({ code: { $in: codes } });
+      foundUrls = await queryResult.toArray();
     } catch (err) {
-      res.status(500).json({ message: 'Error fetching URLs from database' });
+      return res
+        .status(500)
+        .json({ message: 'Error fetching URLs from database' });
     }
 
-    const count = result.deletedCount;
-    const success = !!result.result.ok;
+    if (!foundUrls.length) {
+      return res.status(402).json({ message: 'No URLs found matching query' });
+    }
 
-    console.log(`ADMIN DELETED ${count} item${count === 1 ? '' : 's'}`);
+    // Determine which urls to flag and which to delete
+    const user = session.user.email;
+    const flagCodes = [];
+    const delCodes = [];
 
-    return res.json({
-      count,
-      success,
-    });
+    for (let url of foundUrls) {
+      // URL already has a flag
+      if (url.flags && url.flags.length) {
+        // URL not flagged by this user yet,
+        if (!url.flags.some((flagUser) => flagUser === user)) {
+          // One more flag will be under threshold, add flag
+          if (url.flags.length + 1 < DELETE_FLAG_THRESHOLD) {
+            flagCodes.push(url.code);
+          } else {
+            // Meets threshold, delete
+            delCodes.push(url.code);
+          }
+        }
+      } else {
+        // No flags exist yet
+        if (DELETE_FLAG_THRESHOLD > 1) {
+          flagCodes.push(url.code);
+        } else {
+          delCodes.push(url.code);
+        }
+      }
+    }
+
+    // Flag any that need it
+    let flagResult: UpdateWriteOpResult;
+    if (flagCodes.length) {
+      try {
+        flagResult = await Url.updateMany(
+          { code: { $in: flagCodes } },
+          {
+            $push: { flags: user },
+          }
+        );
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ message: 'Error flagging URLs in database' });
+      }
+
+      const flagCount = flagResult.modifiedCount;
+      console.log(
+        `ADMIN FLAGGED ${flagCount} URL${flagCount === 1 ? '' : 's'}`
+      );
+    }
+
+    // Delete any that need it
+    let delResult: DeleteWriteOpResultObject;
+    if (delCodes.length) {
+      try {
+        delResult = await Url.deleteMany({ code: { $in: delCodes } });
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ message: 'Error deleting URLs from database' });
+      }
+
+      const delCount = delResult.deletedCount;
+      console.log(`ADMIN DELETED ${delCount} URL${delCount === 1 ? '' : 's'}`);
+    }
+
+    const response: DeleteResponse = {
+      success: !!flagResult?.result?.ok || !!delResult?.result?.ok,
+      flagged: flagResult?.modifiedCount === flagCodes.length ? flagCodes : [],
+      deleted: delResult?.deletedCount === delCodes.length ? delCodes : [],
+    };
+
+    return res.json(response);
   }
 );
 

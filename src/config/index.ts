@@ -27,3 +27,8 @@ export const RESERVED_CODES = [
   'screws',
   'support',
 ];
+
+// Threshold before deletion is done on flagged URLs
+// Example: Once a URL is flagged for deletion a second time
+// by a different user, it gets deleted instead of flagged
+export const DELETE_FLAG_THRESHOLD = 2;
