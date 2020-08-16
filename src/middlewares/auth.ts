@@ -4,7 +4,11 @@ import { getSession } from 'next-auth/client';
 
 import { SessionType } from '../types/auth';
 
-const auth: RequestHandler<NextApiRequest, NextApiResponse> = async (
+export interface AuthSessionRequest extends NextApiRequest {
+  session: SessionType;
+}
+
+const auth: RequestHandler<AuthSessionRequest, NextApiResponse> = async (
   req,
   res,
   next
@@ -14,6 +18,8 @@ const auth: RequestHandler<NextApiRequest, NextApiResponse> = async (
   if (!session) {
     return res.status(403).json({ message: 'Not authorized' });
   }
+
+  req.session = session;
 
   return next();
 };
