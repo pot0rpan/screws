@@ -69,16 +69,18 @@ interface Props {
 
 const Page: NextPage<Props> = ({ code, url, passwordRequired }) => {
   if (url) {
+    const isSecretUrl = stringIncludesSubstring(url.longUrl, SECRET_URLS);
+
     return (
       <Layout
         title={`/${code}`}
         description={
-          stringIncludesSubstring(url.longUrl, SECRET_URLS)
+          isSecretUrl
             ? undefined
             : `Landing page for redirect to ${url.longUrl}`
         }
-        ogImage={url.preview?.image?.url}
-        ogUrl={`${BASE_URL}/${url.code}`}
+        ogImage={isSecretUrl ? undefined : url.preview?.image?.url}
+        ogUrl={isSecretUrl ? undefined : `${BASE_URL}/${url.code}`}
       >
         <RedirectInfo url={url} />
       </Layout>
