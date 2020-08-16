@@ -63,16 +63,14 @@ a:focus {
   text-decoration: none;
 }
 
-.text-gradient {
-  background: linear-gradient(to right, var(--primary), var(--accent));
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-secondary {
-  color: var(--secondary);
+.monospace {
+  font-family: Consolas, Monaco, 'Lucida Console', 'Andale Mono', 'Ubuntu Mono',
+    'Courier New', Courier, monospace;
 }
 
 .accent {
   color: var(--primary);
+}
+.danger {
+  color: var(--danger);
 }

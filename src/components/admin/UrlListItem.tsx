@@ -35,7 +35,7 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
               onChange={onSelect}
             />
           </td>
-          <td>{url.flags || 0}</td>
+          <td className={url.flags ? 'danger' : 'accent'}>{url.flags || 0}</td>
           <td>
             <Link href={`/${url.code}`}>
               <a>/{url.code}</a>
@@ -49,7 +49,7 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
             className={
               url.expiration && url.expiration < new Date().getTime()
                 ? 'danger'
-                : ''
+                : 'accent'
             }
           >
             {url.expiration
@@ -62,7 +62,7 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
           <td className={url.password ? 'accent' : 'danger'}>
             {url.password ? 'Yes' : 'No'}
           </td>
-          <td>{url._id}</td>
+          <td className="monospace">{url._id}</td>
         </>
       )}
 
@@ -92,9 +92,6 @@ const UrlListItem: React.FC<Props> = ({ url, onSelect, selected }) => {
             text-align: left;
             text-overflow: ellipsis;
             white-space: nowrap;
-          }
-          .row td.danger {
-            color: var(--danger);
           }
         `}
       </style>
