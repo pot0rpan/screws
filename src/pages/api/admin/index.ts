@@ -10,6 +10,7 @@ import {
 
 import { UrlDbObjectType, UrlClientObjectType } from '../../../types/url';
 import { URL_COLLECTION_NAME, DELETE_FLAG_THRESHOLD } from '../../../config';
+import { Logger } from '../../../utils/logger';
 import authMiddleware, { AuthSessionRequest } from '../../../middlewares/auth';
 import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
 
@@ -68,8 +69,6 @@ handler.post(
   async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
     const { query, field }: PostRequestBody = req.body;
 
-    console.log('ADMIN QUERY:\n', JSON.stringify(req.body));
-
     // Verify inputs to use for query
     if ((!query && query !== null) || !field || !queryFields.includes(field)) {
       return res.status(402).json({ message: 'Invalid inputs' });
@@ -105,7 +104,7 @@ handler.post(
   }
 );
 
-interface DeleteRequest extends DatabaseRequest, AuthSessionRequest {}
+export interface AdminRequest extends DatabaseRequest, AuthSessionRequest {}
 
 interface DeleteRequestBody {
   codes: string[];
@@ -118,7 +117,7 @@ export interface DeleteResponse {
 }
 
 handler.delete(
-  async (req: DeleteRequest, res: NextApiResponse, _next: NextHandler) => {
+  async (req: AdminRequest, res: NextApiResponse, _next: NextHandler) => {
     const { codes }: DeleteRequestBody = req.body;
     const { session } = req;
 
@@ -192,8 +191,11 @@ handler.delete(
       }
 
       const flagCount = flagResult.modifiedCount;
-      console.log(
-        `ADMIN FLAGGED ${flagCount} URL${flagCount === 1 ? '' : 's'}`
+      Logger.log(
+        `${session.user.name} flagged ${flagCount} URL${
+          flagCount === 1 ? '' : 's'
+        }`,
+        'Admin Activity'
       );
     }
 
@@ -209,7 +211,12 @@ handler.delete(
       }
 
       const delCount = delResult.deletedCount;
-      console.log(`ADMIN DELETED ${delCount} URL${delCount === 1 ? '' : 's'}`);
+      Logger.log(
+        `${session.user.name} deleted ${delCount} URL${
+          delCount === 1 ? '' : 's'
+        }`,
+        'Admin Activity'
+      );
     }
 
     const response: DeleteResponse = {

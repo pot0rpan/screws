@@ -3,9 +3,11 @@ import nextConnect, { NextHandler } from 'next-connect';
 import { Collection, Cursor } from 'mongodb';
 
 import { UrlDbObjectType } from '../../../types/url';
+import { AdminRequest } from './index';
 import { URL_COLLECTION_NAME } from '../../../config';
+import { Logger } from '../../../utils/logger';
 import authMiddleware from '../../../middlewares/auth';
-import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
+import dbMiddleware from '../../../middlewares/database';
 
 const handler = nextConnect();
 handler.use(authMiddleware);
@@ -13,8 +15,11 @@ handler.use(dbMiddleware);
 
 // Get full database backup in JSON
 handler.get(
-  async (req: DatabaseRequest, res: NextApiResponse, _next: NextHandler) => {
-    console.log('ADMIN DOWNLOADING DATABASE BACKUP');
+  async (req: AdminRequest, res: NextApiResponse, _next: NextHandler) => {
+    Logger.log(
+      `${req.session.user.name} downloaded database backup`,
+      'Admin Activity'
+    );
 
     const Url: Collection<UrlDbObjectType> = req.db.collection(
       URL_COLLECTION_NAME
