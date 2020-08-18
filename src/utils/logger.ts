@@ -7,7 +7,14 @@ export const Logger = {
 
     // Make sure webhook request only ever runs on server,
     // since url needs no authentication to use
-    if (typeof window !== 'undefined' || !WEBHOOK_URL) return;
+    // Also only allow in production
+    if (
+      typeof window !== 'undefined' ||
+      !WEBHOOK_URL ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return;
+    }
 
     // Post log in a Discord channel
     await fetch(WEBHOOK_URL, {
