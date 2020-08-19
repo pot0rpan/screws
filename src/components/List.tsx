@@ -1,8 +1,9 @@
 interface Props {
   items: { title: string; description: string }[];
+  primary?: boolean;
 }
 
-const List: React.FC<Props> = ({ items }) => {
+const List: React.FC<Props> = ({ items, primary = true }) => {
   return (
     <ul>
       {items.map((itm) => (
@@ -29,7 +30,8 @@ const List: React.FC<Props> = ({ items }) => {
             position: relative;
           }
           li::before {
-            background: var(--primary-muted);
+            background: var(--${primary ? 'primary' : 'danger'});
+            opacity: 0.8;
             content: '';
             height: 100%;
             left: -1rem;
