@@ -6,7 +6,7 @@ import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { useCookies } from '../hooks/cookie-hook';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
-import cookies from 'next-cookies';
+import List from '../components/List';
 
 const exampleData = [
   {
@@ -102,14 +102,12 @@ const About: NextPage = () => {
             to let {WEBSITE_NAME} staff view and remove any URL for any reason,
             without notice.
           </p>
-          <ul>
-            {exampleData.map((data) => (
-              <li key={data.name}>
-                <b>{data.name}</b>
-                <span>{data.desc}</span>
-              </li>
-            ))}
-          </ul>
+          <List
+            items={exampleData.map((d) => ({
+              title: d.name,
+              description: d.desc,
+            }))}
+          />
         </section>
 
         <section className="cookies">
