@@ -24,6 +24,7 @@ export const RESERVED_CODES = [
   'api',
   'about',
   'admin',
+  'index',
   'screws',
   'support',
 ];
