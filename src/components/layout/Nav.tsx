@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { WEBSITE_NAME } from '../config';
+import { WEBSITE_NAME } from '../../config';
 
 const Nav: React.FC = () => {
   return (

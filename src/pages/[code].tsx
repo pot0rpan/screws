@@ -5,9 +5,9 @@ import { UrlClientObjectType } from '../types/url';
 import { BASE_URL, SECRET_URLS } from '../config';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { stringIncludesSubstring } from '../utils';
-import Layout from '../components/Layout';
+import Layout from '../components/layout/Layout';
+import NotFound404 from '../components/shared/NotFound404';
 import RedirectInfo from '../components/RedirectInfo';
-import NotFound404 from '../components/NotFound404';
 import AuthorizeUrl from '../components/AuthorizeUrl';
 
 interface UrlResponseType {

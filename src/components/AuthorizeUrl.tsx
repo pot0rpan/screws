@@ -6,9 +6,9 @@ import { VALIDATOR_MINLENGTH } from '../utils/validators';
 import { useForm } from '../hooks/form-hook';
 import { useHttpClient } from '../hooks/http-hook';
 import { useCookies } from '../hooks/cookie-hook';
-import Input from './Input';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
+import Input from './shared/Input';
+import Button from './shared/Button';
+import LoadingSpinner from './shared/LoadingSpinner';
 import RedirectInfo from './RedirectInfo';
 
 interface Props {

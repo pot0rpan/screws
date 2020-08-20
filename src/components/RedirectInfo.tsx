@@ -8,7 +8,7 @@ import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { stringIncludesSubstring } from '../utils';
 import { formatTime, MILLISECONDS_PER_DAY } from '../utils/time';
 import { useCookies } from '../hooks/cookie-hook';
-import Button from './Button';
+import Button from './shared/Button';
 import QRCodeGenerator from './QRCodeGenerator';
 import OGPreview from './OGPreview';
 import TrackingParams from './TrackingParams';

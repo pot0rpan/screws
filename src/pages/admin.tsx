@@ -2,9 +2,9 @@ import { NextPage } from 'next';
 import { signIn, signOut, useSession } from 'next-auth/client';
 
 import { SessionType, AdminUserType } from '../types/auth';
-import Layout from '../components/Layout';
-import Button from '../components/Button';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Layout from '../components/layout/Layout';
+import Button from '../components/shared/Button';
+import LoadingSpinner from '../components/shared/LoadingSpinner';
 import Dashboard from '../components/admin/Dashboard';
 
 const AdminPage: NextPage = () => {

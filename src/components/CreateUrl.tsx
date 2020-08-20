@@ -11,9 +11,9 @@ import { addUrlProtocolIfMissing } from '../utils/urls';
 import UrlsContext from '../context/urls-context';
 import { useHttpClient } from '../hooks/http-hook';
 import { useForm } from '../hooks/form-hook';
-import Input from './Input';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
+import Input from './shared/Input';
+import Button from './shared/Button';
+import LoadingSpinner from './shared/LoadingSpinner';
 import UrlCard from './UrlCard';
 
 export const expirationOptions = [

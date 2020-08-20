@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import { WEBSITE_NAME, BASE_URL } from '../config';
+import { WEBSITE_NAME, BASE_URL } from '../../config';
 import Nav from './Nav';
 import Footer from './Footer';
 

@@ -1,9 +1,8 @@
-import React from 'react';
-import Button from '../Button';
-import { useHttpClient } from '../../hooks/http-hook';
-import { BASE_URL, WEBSITE_NAME } from '../../config';
 import { UrlDbObjectType } from '../../types/url';
-import LoadingSpinner from '../LoadingSpinner';
+import { BASE_URL, WEBSITE_NAME } from '../../config';
+import { useHttpClient } from '../../hooks/http-hook';
+import Button from '../shared/Button';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
 const Backup: React.FC = () => {
   const { isLoading, sendRequest, error, clearError } = useHttpClient();

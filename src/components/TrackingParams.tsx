@@ -1,7 +1,7 @@
 import { WEBSITE_NAME } from '../config';
 import { getTrackingParamData } from '../utils/urls';
-import List from './List';
-import Button from './Button';
+import List from './shared/List';
+import Button from './shared/Button';
 
 interface Props {
   url: string;

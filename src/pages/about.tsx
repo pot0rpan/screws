@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { WEBSITE_NAME } from '../config';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { useCookies } from '../hooks/cookie-hook';
-import Layout from '../components/Layout';
-import Button from '../components/Button';
-import List from '../components/List';
+import Layout from '../components/layout/Layout';
+import Button from '../components/shared/Button';
+import List from '../components/shared/List';
 
 const exampleData = [
   {
