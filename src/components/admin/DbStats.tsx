@@ -21,13 +21,13 @@ const DbStats: React.FC<Props> = ({ stats }) => {
         <span className="accent">{stats.name.split('.')[1]}</span>
       </p>
       <p className="row">
-        <span>Database usage:</span>
+        <span>Collection usage:</span>
         <span className="accent">{stats.size > -1 ? stats.size : '?'} B</span>
       </p>
       <p className="row">
-        <span>Database total size:</span>
+        <span>Collection allocated size:</span>
         <span className="accent">
-          {stats.storageSize > -1 ? stats.storageSize : '?'} B
+          {stats.allocatedSize > -1 ? stats.allocatedSize : '?'} B
         </span>
       </p>
       <p className="row">

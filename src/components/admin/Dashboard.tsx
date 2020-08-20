@@ -60,7 +60,7 @@ const Dashboard: React.FC<Props> = ({ user, signOut }) => {
     name: '?.?',
     count: -1,
     size: -1,
-    storageSize: -1,
+    allocatedSize: -1,
     avgObjSize: -1,
   });
   const [formState, inputHandler] = useForm(

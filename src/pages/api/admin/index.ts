@@ -29,7 +29,7 @@ export interface DbStatsType {
   name: string;
   count: number;
   size: number;
-  storageSize: number;
+  allocatedSize: number;
   avgObjSize: number;
 }
 
@@ -48,7 +48,7 @@ handler.get(
         name: statsRes.ns,
         count: statsRes.count,
         size: statsRes.size,
-        storageSize: statsRes.storageSize,
+        allocatedSize: statsRes.storageSize,
         avgObjSize: statsRes.avgObjSize,
       };
 
