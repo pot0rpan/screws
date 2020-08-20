@@ -11,6 +11,7 @@ import { useCookies } from '../hooks/cookie-hook';
 import Button from './Button';
 import QRCodeGenerator from './QRCodeGenerator';
 import OGPreview from './OGPreview';
+import TrackingParams from './TrackingParams';
 
 interface Props {
   url: UrlClientObjectType;
@@ -59,9 +60,7 @@ const RedirectInfo: React.FC<Props> = ({ url }) => {
           </p>
         )}
 
-        <a id="cta" href={url.longUrl}>
-          <Button>Continue to page</Button>
-        </a>
+        <TrackingParams url={url.longUrl} />
 
         <div className="info">
           {url.preview ? (
@@ -168,11 +167,6 @@ const RedirectInfo: React.FC<Props> = ({ url }) => {
           .expiration span {
             font-size: 1.2rem;
             margin-left: 0.25rem;
-            text-align: center;
-          }
-          #cta {
-            font-size: 1.2rem;
-            margin: 2rem 0;
             text-align: center;
           }
           a {
