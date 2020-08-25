@@ -23,9 +23,7 @@ const OGPreview: React.FC<Props> = ({ data, url }) => {
         <div className="text">
           {title ? (
             <h3 className="accent">
-              <Link href={url}>
-                <a>{title}</a>
-              </Link>
+              <a href={url}>{title}</a>
             </h3>
           ) : null}
 
