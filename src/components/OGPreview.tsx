@@ -1,6 +1,3 @@
-import React from 'react';
-import Link from 'next/link';
-
 import { PreviewDataType } from '../types/url';
 
 interface Props {
