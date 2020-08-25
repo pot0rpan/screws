@@ -1,6 +1,6 @@
 # [Scre.ws](https://scre.ws)
 
-Screws is a URL shortening service made with Next.js and Mongo DB.
+Screws is a URL shortening service made with Next.js, Mongo DB and Rick Astley.
 
 ## Getting Started
 
