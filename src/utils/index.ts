@@ -3,19 +3,19 @@ export const stringIncludesSubstring = (
   string: string,
   queries: string | RegExp | (string | RegExp)[]
 ) => {
-  const regExps: RegExp[] = [];
-
-  // Turn all queries into RegExp
+  // Convert `queries` to array if only a single query
   if (!Array.isArray(queries)) {
-    regExps.push(new RegExp(queries));
-  } else {
-    for (let q of queries) {
-      regExps.push(new RegExp(q));
-    }
+    queries = [queries];
   }
 
-  for (const regExp of regExps) {
-    if (regExp.test(string)) return true;
+  // Search for substring query match
+  for (const query of queries) {
+    if (
+      (typeof query === 'string' && string.includes(query)) ||
+      (typeof query === 'object' && query.test(string))
+    ) {
+      return true;
+    }
   }
 
   return false;
