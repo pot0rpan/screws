@@ -1,8 +1,11 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { SECRET_URLS } from '../../config';
+import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../../config/cookies';
 import { MILLISECONDS_PER_DAY } from '../../utils/time';
 import { addUrlProtocolIfMissing } from '../../utils/urls';
+import { getCookie, removeCookie } from '../../hooks/cookie-hook';
 import RedirectInfo from '../RedirectInfo';
 
 describe('RedirectInfo Component', () => {
@@ -57,5 +60,19 @@ describe('RedirectInfo Component', () => {
 
     // Cleanup
     window.location = originalLocation;
+  });
+
+  it('sets auto redirect cookie on button click', () => {
+    const { getByText } = render(<RedirectInfo url={defaultUrl} />);
+
+    const setCookieBtn = getByText('Hide this page for 30 days');
+    expect(setCookieBtn).toBeInTheDocument();
+
+    userEvent.click(setCookieBtn);
+    expect(getByText('Done')).toBeDisabled();
+    expect(getCookie(COOKIE_SKIP_REDIRECT_CONFIRMATION)).toBe('true');
+
+    // Cleanup
+    removeCookie(COOKIE_SKIP_REDIRECT_CONFIRMATION);
   });
 });
