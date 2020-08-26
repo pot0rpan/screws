@@ -23,5 +23,5 @@ export const formatTime = (milliseconds: number) => {
 
   amount = Math.round(amount);
 
-  return `${amount} ${unit}${amount !== 1 && 's'}`;
+  return `${amount} ${unit}${amount !== 1 ? 's' : ''}`;
 };
