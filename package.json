@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --verbose"
+    "test": "jest"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
