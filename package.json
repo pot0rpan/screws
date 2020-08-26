@@ -39,6 +39,7 @@
     "@types/react-icons": "^3.0.0",
     "@types/shortid": "0.0.29",
     "jest": "^26.4.2",
+    "jest-fetch-mock": "^3.0.3",
     "typescript": "^3.9.6"
   }
 }
