@@ -27,6 +27,3 @@ export const removeCookie = (name: string, path = '/') => {
     0
   ).toUTCString()}`;
 };
-export const useCookies = () => {
-  return { setCookie, getCookie, removeCookie };
-};

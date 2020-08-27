@@ -7,7 +7,7 @@ import { BASE_URL, SECRET_URLS } from '../config';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { stringIncludesSubstring } from '../utils';
 import { formatTime, MILLISECONDS_PER_DAY } from '../utils/time';
-import { useCookies } from '../hooks/cookie-hook';
+import { setCookie } from '../utils/cookies';
 import Button from './shared/Button';
 import QRCodeGenerator from './QRCodeGenerator';
 import OGPreview from './OGPreview';
@@ -18,7 +18,6 @@ interface Props {
 }
 
 const RedirectInfo: React.FC<Props> = ({ url }) => {
-  const { setCookie } = useCookies();
   const [cookieEnabled, setCookieEnabled] = useState(false);
   const secretRedirect = stringIncludesSubstring(url.longUrl, SECRET_URLS);
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { WEBSITE_NAME } from '../config';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
-import { useCookies } from '../hooks/cookie-hook';
+import { getCookie, removeCookie } from '../utils/cookies';
 import Layout from '../components/layout/Layout';
 import Button from '../components/shared/Button';
 import List from '../components/shared/List';
@@ -42,7 +42,6 @@ const exampleData = [
 
 const About: NextPage = () => {
   const [cookiesEnabled, setCookiesEnabled] = useState(true);
-  const { removeCookie, getCookie } = useCookies();
 
   // Update state with actual cookie value once page loads in client
   useEffect(() => {

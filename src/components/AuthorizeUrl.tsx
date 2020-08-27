@@ -5,7 +5,7 @@ import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../config/cookies';
 import { VALIDATOR_MINLENGTH } from '../utils/validators';
 import { useForm } from '../hooks/form-hook';
 import { useHttpClient } from '../hooks/http-hook';
-import { useCookies } from '../hooks/cookie-hook';
+import { getCookie } from '../utils/cookies';
 import Input from './shared/Input';
 import Button from './shared/Button';
 import LoadingSpinner from './shared/LoadingSpinner';
@@ -17,7 +17,6 @@ interface Props {
 
 const AuthorizeUrl: React.FC<Props> = ({ code }) => {
   const [url, setUrl] = useState<UrlClientObjectType>(null!);
-  const { getCookie } = useCookies();
   const { sendRequest, isLoading, error, clearError } = useHttpClient();
   const [formState, inputHandler] = useForm(
     {
