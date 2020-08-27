@@ -23,6 +23,7 @@ NEXTAUTH_SECRET= // Secret key used for signing JWT and other authentication stu
 DISCORD_SERVER_ID=1234567890 // ID of support server
 DISCORD_CLIENT_ID=1234567890 // Client ID for Discord Application
 DISCORD_CLIENT_SECRET=1234567890 // Client Secret for Discord Application
+DISCORD_LOGS_WEBHOOK_URL=https://discordapp.com/api/webhooks/ // For admin logs
 
 DB_CONNECTION_STRING=mongodb+srv://<user>:<password>@<clustername>.xxxxx.azure.mongodb.net/<dbname>?retryWrites=true&w=majority
 ```
