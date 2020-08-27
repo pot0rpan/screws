@@ -21,9 +21,16 @@ export const RESERVED_CODES = [
 ];
 
 // Query parameters to warn user about on /[code] page
-// Can mix strings and RegExp
-// Keep these all lower case for .toLowerCase() comparison
-export const TRACKING_PARAMS = [/utm_\w+/, 'fbclid'];
+export const TRACKING_PARAMS = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+  'utm_brand',
+  'utm_name',
+  'fbclid',
+];
 
 // Threshold before deletion is done on flagged URLs
 // Example: Once a URL is flagged for deletion a second time

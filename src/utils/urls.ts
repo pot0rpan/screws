@@ -1,10 +1,8 @@
 import { Collection } from 'mongodb';
 import randomWords from 'random-words';
 import shortId from 'shortid';
-import url from 'url';
 
 import { RESERVED_CODES, TRACKING_PARAMS } from '../config';
-import { stringIncludesSubstring } from './index';
 
 // https://www.regextester.com/96146
 export const UrlRegExp = /^((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
@@ -62,8 +60,8 @@ type UrlTrackingDataType = {
 };
 
 export const getTrackingParamData = (dirtyUrl: string) => {
-  const urlObj = url.parse(dirtyUrl);
-  let baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+  const urlObj = new URL(dirtyUrl);
+
   const urlData: UrlTrackingDataType = {
     url: dirtyUrl,
     isDirty: false,
@@ -71,47 +69,20 @@ export const getTrackingParamData = (dirtyUrl: string) => {
     cleanUrl: dirtyUrl,
   };
 
-  // If no query params, return default object
-  if (!urlObj.query) return urlData;
-
-  const _queries = urlObj.query.split('&');
-  const safeParams: ParamsType[] = [];
-  const trackingParams: ParamsType[] = [];
-
-  // Gather up all key/value pairs of query params
-  // Add to safe or dirty objects after checking
-  for (const query of _queries) {
-    const keyValue = query.split('=');
-    const key = keyValue[0];
-    const value = keyValue.length > 1 ? keyValue[1] : '';
-
-    if (stringIncludesSubstring(key, TRACKING_PARAMS)) {
-      trackingParams.push({ key, value });
-    } else {
-      safeParams.push({ key, value });
+  // If bad params are found, mark url as dirty,
+  // add trackingParams entry, and set cleanUrl
+  // as url with that param removed
+  TRACKING_PARAMS.forEach((badParam) => {
+    if (urlObj.searchParams.has(badParam)) {
+      urlData.isDirty = true;
+      urlData.trackingParams.push({
+        key: badParam,
+        value: urlObj.searchParams.get(badParam),
+      });
+      urlObj.searchParams.delete(badParam);
+      urlData.cleanUrl = urlObj.href;
     }
-  }
-
-  // Construct safe query string for cleanUrl
-  let safeQueryString = '';
-  if (safeParams.length) {
-    safeQueryString =
-      '?' +
-      safeParams
-        .map((q) => {
-          let param = `${q.key}=`;
-          if (q.value) param += `${q.value}`;
-          return param;
-        })
-        .join('&');
-  }
-
-  // Populate object with details on dirty url
-  if (trackingParams.length) {
-    urlData.isDirty = true;
-    urlData.trackingParams = trackingParams;
-    urlData.cleanUrl = baseUrl + safeQueryString;
-  }
+  });
 
   return urlData;
 };
