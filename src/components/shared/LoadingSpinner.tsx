@@ -13,7 +13,7 @@ const LoadingSpinner: React.FC<Props> = ({
         dimBackground && 'dim-background'
       }`}
     >
-      <div className="dual-ring"></div>
+      <div className="dual-ring" data-testid="loading-spinner"></div>
       <style jsx>
         {`
           .dual-ring {
