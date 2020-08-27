@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import AuthorizeUrl from '../AuthorizeUrl';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../../config/cookies';
-import { setCookie, removeCookie } from '../../hooks/cookie-hook';
+import { setCookie, removeCookie } from '../../utils/cookies';
 
 const mockUrlObject = {
   id: '1',

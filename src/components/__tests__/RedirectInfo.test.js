@@ -3,9 +3,9 @@ import userEvent from '@testing-library/user-event';
 
 import { SECRET_URLS } from '../../config';
 import { COOKIE_SKIP_REDIRECT_CONFIRMATION } from '../../config/cookies';
+import { getCookie, removeCookie } from '../../utils/cookies';
 import { MILLISECONDS_PER_DAY } from '../../utils/time';
 import { addUrlProtocolIfMissing } from '../../utils/urls';
-import { getCookie, removeCookie } from '../../hooks/cookie-hook';
 import RedirectInfo from '../RedirectInfo';
 
 describe('RedirectInfo Component', () => {
