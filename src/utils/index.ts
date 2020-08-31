@@ -20,3 +20,15 @@ export const stringIncludesSubstring = (
 
   return false;
 };
+
+export const promiseTimeout = <T>(
+  promise: Promise<T>,
+  timeout: number
+): Promise<T> => {
+  return new Promise<T>(async (resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Promise timed out'));
+    }, timeout);
+    promise.then(resolve, reject);
+  });
+};

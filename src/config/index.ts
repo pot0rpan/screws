@@ -18,6 +18,7 @@ export const RESERVED_CODES = [
   'index',
   'screws',
   'support',
+  'unscrew',
 ];
 
 // Query parameters to warn user about on /[code] page

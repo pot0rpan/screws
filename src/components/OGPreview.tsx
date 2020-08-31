@@ -38,6 +38,11 @@ const OGPreview: React.FC<Props> = ({ data, url }) => {
           .preview h3 {
             margin-bottom: 0;
           }
+          .image {
+            color: var(--danger);
+            margin-bottom: 0;
+            text-align: center;
+          }
           .image img {
             display: block;
             height: auto;
