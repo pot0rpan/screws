@@ -13,6 +13,11 @@ const Nav: React.FC = () => {
         </Link>
         <ul>
           <li>
+            <Link href="/unscrew">
+              <a>Unscrew</a>
+            </Link>
+          </li>
+          <li>
             <Link href="/about">
               <a>About</a>
             </Link>
@@ -26,7 +31,7 @@ const Nav: React.FC = () => {
             display: flex;
             justify-content: center;
             margin-bottom: 0.5rem;
-            padding: 1.5rem 2rem;
+            padding: 1.5rem;
           }
           .nav a {
             text-decoration: none;
@@ -52,9 +57,13 @@ const Nav: React.FC = () => {
           }
           ul {
             color: var(--primary-muted);
+            display: flex;
             list-style: none;
             margin: 0;
             padding: 0;
+          }
+          li {
+            margin-left: 0.75rem;
           }
           li a:hover {
             color: var(--primary);
@@ -62,6 +71,14 @@ const Nav: React.FC = () => {
           @media screen and (min-width: 576px) {
             .home-link {
               --size: 2.4rem;
+            }
+            .nav {
+              padding-left: 2rem;
+              padding-right: 2rem;
+            }
+            li {
+              font-size: 1.1em;
+              margin-left: 1rem;
             }
           }
         `}

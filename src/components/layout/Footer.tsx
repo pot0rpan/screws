@@ -10,6 +10,11 @@ const Footer: React.FC = () => {
           </Link>
         </li>
         <li>
+          <Link href="/unscrew">
+            <a>Unscrew</a>
+          </Link>
+        </li>
+        <li>
           <Link href="/about">
             <a>About</a>
           </Link>
