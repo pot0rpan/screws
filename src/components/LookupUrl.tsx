@@ -165,6 +165,7 @@ const UnscrewUrl: React.FC = () => {
           a.response-url {
             font-size: 1.4rem;
             margin: 1rem auto;
+            text-align: center;
             word-break: break-word;
             word-wrap: wrap-word;
           }
