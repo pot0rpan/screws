@@ -129,7 +129,7 @@ const UnscrewUrl: React.FC = () => {
             margin: 0 auto;
             max-width: 100%;
             position: relative;
-            width: 400px;
+            width: calc(400px - 2rem); /* Match index page sizing */
           }
           form .button {
             padding: 1rem;

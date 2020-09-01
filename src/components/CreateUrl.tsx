@@ -255,7 +255,6 @@ const CreateUrl: React.FC = () => {
             width: 100%;
           }
           .shortener h2 {
-            margin-top: 0;
             text-align: center;
           }
           .shortener form {
