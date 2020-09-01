@@ -5,7 +5,8 @@ import shortId from 'shortid';
 import { RESERVED_CODES, TRACKING_PARAMS } from '../config';
 
 // https://www.regextester.com/96146
-export const UrlRegExp = /^((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
+// Modified to allow single char SLD and up to 12 char TLD
+export const UrlRegExp = /^((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,12}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
 
 export const addUrlProtocolIfMissing = (url: string) =>
   url.startsWith('http://') || url.startsWith('https://')
