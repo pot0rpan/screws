@@ -64,6 +64,9 @@ const UnscrewUrl: React.FC = () => {
           onInput={inputHandler}
           validators={[VALIDATOR_URL()]}
           errorText="Please enter a valid URL"
+          inputMode="url"
+          autoCorrect="off"
+          autoCapitalize="none"
         />
 
         {error ? <small>{error}</small> : null}
