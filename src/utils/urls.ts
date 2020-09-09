@@ -23,32 +23,25 @@ export const isReservedCode = (code: string) =>
 //! : (Collection: Collection) => string
 export const generateRandomCode = async (
   Collection: Collection,
-  useFullWords = true
+  useFullWords = true,
+  numWords = 2
 ) => {
   let code = '';
   let isDuplicate = true;
 
-  try {
-    if (useFullWords) {
-      // Use full words like gfycat
-      let numWords = 2; // 2 words by default
+  code = useFullWords ? randomWords(numWords).join('') : shortId.generate();
 
-      code = randomWords(numWords).join('');
-      numWords++; // Increment for duplicate scaling
-      const existingUrl = await Collection.findOne({ code });
-      isDuplicate = !!existingUrl || isReservedCode(code);
-    } else {
-      // Use random characters
-      code = shortId.generate();
-      const existingUrl = await Collection.findOne({ code });
-      isDuplicate = !!existingUrl || isReservedCode(code);
-    }
+  try {
+    const existingUrl = await Collection.findOne({ code });
+    isDuplicate = !!existingUrl || isReservedCode(code);
   } catch (err) {
     console.log(err);
-    isDuplicate = true;
   }
 
-  return isDuplicate ? generateRandomCode(Collection, useFullWords) : code;
+  // Keep recursing until not duplicate url
+  return isDuplicate
+    ? generateRandomCode(Collection, useFullWords, ++numWords)
+    : code;
 };
 
 type ParamsType = { key: string; value: string };

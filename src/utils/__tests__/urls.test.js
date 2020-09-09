@@ -8,14 +8,19 @@ import {
   getTrackingParamData,
 } from '../urls';
 
+// Mock `findOne` to never find existing urls
+//TODO: Find a way to mock separate returns for each call
+//      to fully test recursive `generateRandomCode()`
 const mockDbCollection = {
-  findOne: jest.fn(() => Promise.reject()),
+  findOne: jest.fn(() => Promise.resolve(null)),
 };
 
 jest.mock('shortid', () => ({
   generate: jest.fn(() => 'abcdefg'),
 }));
-jest.mock('random-words', () => jest.fn(() => ['test', 'words']));
+jest.mock('random-words', () =>
+  jest.fn((numWords) => ['one', 'two', 'three'].slice(0, numWords))
+);
 
 beforeEach(() => {
   mockDbCollection.findOne.mockReset();
@@ -41,17 +46,27 @@ describe('isReservedCode util function', () => {
 });
 
 describe('generateRandomCode util function', () => {
-  it('returns a randomly generated character code if second param `false`', async () => {
+  it('returns 2-word code by default', async () => {
+    const randomCode = await generateRandomCode(mockDbCollection);
+    expect(randomWords).toBeCalledTimes(1);
+    expect(randomWords).toBeCalledWith(2);
+    expect(mockDbCollection.findOne).toBeCalledTimes(1);
+    expect(randomCode).toBe('onetwo');
+  });
+
+  it('returns random character code if second param `false`', async () => {
     const randomCode = await generateRandomCode(mockDbCollection, false);
     expect(shortid.generate).toBeCalledTimes(1);
-    expect(mockDbCollection.findOne).toBeCalled();
+    expect(mockDbCollection.findOne).toBeCalledTimes(1);
     expect(randomCode).toBe('abcdefg');
   });
 
-  it('returns random word code by default', async () => {
-    const randomCode = await generateRandomCode(mockDbCollection);
+  it('returns n-word code as specified', async () => {
+    const randomCode = await generateRandomCode(mockDbCollection, true, 3);
     expect(randomWords).toBeCalledTimes(1);
-    expect(randomCode).toBe('testwords');
+    expect(randomWords).toBeCalledWith(3);
+    expect(mockDbCollection.findOne).toBeCalledTimes(1);
+    expect(randomCode).toBe('onetwothree');
   });
 });
 
