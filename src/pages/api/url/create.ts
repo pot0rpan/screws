@@ -4,6 +4,7 @@ import nextConnect from 'next-connect';
 import bcrypt from 'bcryptjs';
 import ogs from 'open-graph-scraper';
 import rateLimit from 'express-rate-limit';
+import { Collection } from 'mongodb';
 
 import {
   UrlCreationObjectType,
@@ -77,7 +78,7 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
     // If no expiration time and no password supplied, send existing Url object if found
     if (expirationHours === -1 && password === '') {
       // See if there's already a random code with same url and no expiration date or pass
-      const existingUrl: UrlDbObjectType = await Url.findOne({
+      const existingUrl: UrlDbObjectType | null = await Url.findOne({
         longUrl,
         isRandomCode: true,
         expiration: null,
@@ -96,7 +97,10 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
 
     // Generate safe-to-use code
     isRandomCode = true;
-    code = await generateRandomCode(Url, USE_FULL_WORDS);
+    code = await generateRandomCode(
+      Url as Collection<UrlDbObjectType>,
+      USE_FULL_WORDS
+    );
   }
 
   // Make sure code is not a reserved route
@@ -115,7 +119,7 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
 
   try {
     // Check if code is taken
-    const existingUrl: UrlDbObjectType = await Url.findOne({ code });
+    const existingUrl: UrlDbObjectType | null = await Url.findOne({ code });
     if (existingUrl) {
       // Delete url if it's expired to allow creation
       if (

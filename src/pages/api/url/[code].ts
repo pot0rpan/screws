@@ -27,7 +27,7 @@ interface RequestBody {
 handler.use(
   async (req: DatabaseRequest, res: NextApiResponse, next: NextHandler) => {
     const allowedMethods = ['GET', 'POST'];
-    if (!allowedMethods.includes(req.method.toUpperCase())) {
+    if (!req.method || !allowedMethods.includes(req.method.toUpperCase())) {
       return next();
     }
 

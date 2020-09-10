@@ -46,7 +46,7 @@ handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { result: ogsResult, error: ogsError } = await ogs({
-    url: null,
+    url: '',
     html,
   });
 

@@ -4,7 +4,7 @@ export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activeHttpRequests = useRef([]);
+  const activeHttpRequests = useRef<AbortController[]>([]);
 
   const sendRequest = useCallback(
     async (url: string, method: string = 'GET', body = null, headers = {}) => {

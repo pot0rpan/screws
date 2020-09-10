@@ -1,10 +1,11 @@
+import type { AppProps } from 'next/app';
 import { useState, useEffect } from 'react';
 
 import { UrlClientObjectType } from '../types/url';
 import UrlsContext from '../context/urls-context';
 import '../styles.css';
 
-export default function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   const [storedUrls, setStoredUrls] = useState<UrlClientObjectType[]>([]);
 
   const addUrl = (url: UrlClientObjectType) => {

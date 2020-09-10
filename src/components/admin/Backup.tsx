@@ -10,7 +10,7 @@ const Backup: React.FC = () => {
   const handleDatabaseDownload = async () => {
     if (error) clearError();
 
-    let data: { date: string; urls: UrlDbObjectType[] };
+    let data: { date: string; urls: UrlDbObjectType[] } | undefined;
 
     try {
       data = await sendRequest(`${BASE_URL}/api/admin/backup`);

@@ -2,6 +2,7 @@ import { Collection } from 'mongodb';
 import randomWords from 'random-words';
 import shortId from 'shortid';
 
+import { UrlDbObjectType } from '../types/url';
 import { RESERVED_CODES, TRACKING_PARAMS } from '../config';
 
 // https://www.regextester.com/96146
@@ -22,14 +23,16 @@ export const isReservedCode = (code: string) =>
 
 //! : (Collection: Collection) => string
 export const generateRandomCode = async (
-  Collection: Collection,
+  Collection: Collection<UrlDbObjectType>,
   useFullWords = true,
   numWords = 2
-) => {
+): Promise<string> => {
   let code = '';
   let isDuplicate = true;
 
-  code = useFullWords ? randomWords(numWords).join('') : shortId.generate();
+  code = useFullWords
+    ? randomWords({ exactly: numWords, join: '' })
+    : shortId.generate();
 
   try {
     const existingUrl = await Collection.findOne({ code });
@@ -71,7 +74,7 @@ export const getTrackingParamData = (dirtyUrl: string) => {
       urlData.isDirty = true;
       urlData.trackingParams.push({
         key: badParam,
-        value: urlObj.searchParams.get(badParam),
+        value: urlObj.searchParams.get(badParam) || '',
       });
       urlObj.searchParams.delete(badParam);
       urlData.cleanUrl = urlObj.href;

@@ -17,7 +17,7 @@ handler.use(dbMiddleware);
 handler.get(
   async (req: AdminRequest, res: NextApiResponse, _next: NextHandler) => {
     Logger.log(
-      `${req.session.user.name} downloaded database backup`,
+      `${req.session?.user.name} downloaded database backup`,
       'Admin Activity'
     );
 
@@ -26,7 +26,7 @@ handler.get(
     );
 
     // Get all urls in db in order of creation
-    let cursor: Cursor<UrlDbObjectType>;
+    let cursor: Cursor<UrlDbObjectType> | undefined;
     try {
       const options = { sort: { date: 1 } };
       cursor = Url.find({}, options);

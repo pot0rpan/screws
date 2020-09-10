@@ -22,7 +22,7 @@ export interface UrlClientObjectType extends BaseUrlObjectType {
 }
 
 export interface UrlCreationObjectType extends BaseUrlObjectType {
-  password: string;
+  password: string | null;
   preview: PreviewDataType | null;
 }
 

@@ -22,7 +22,7 @@ type FormInputsType = {
 };
 
 type FormInputType = {
-  value: string | null;
+  value: string;
   isValid: boolean;
 };
 
@@ -45,13 +45,13 @@ type SetFormDataType = (
   formValidity: boolean
 ) => void;
 
-const formReducer: (
+const formReducer = (
   state: FormStateType,
   action: FormActionType
-) => FormStateType = (state, action) => {
+): FormStateType => {
   switch (action.type) {
     case 'INPUT_CHANGE':
-      if (!action.inputId) return state;
+      if (!action.inputId || !action.value) return state;
 
       let formIsValid = true;
       for (const inputId in state.inputs) {
@@ -80,7 +80,7 @@ const formReducer: (
 
     case 'SET_DATA':
       return {
-        inputs: action.inputs,
+        inputs: action.inputs || state.inputs,
         isValid: action.isValid,
       };
     default:

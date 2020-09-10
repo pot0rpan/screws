@@ -32,7 +32,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
       } else if (data.url) {
         url = data.url;
       } else {
-        ctx.res.statusCode = res.status;
+        ctx.res && (ctx.res.statusCode = res.status);
       }
     } catch (err) {
       console.log('/[code] getServerSideProps catch(err):\n', err);
@@ -47,6 +47,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
     !stringIncludesSubstring(url.longUrl, SECRET_URLS)
   ) {
     const { res } = ctx;
+    if (!res) return;
+
     res.setHeader('location', url.longUrl);
     res.statusCode = 302;
     return res.end();

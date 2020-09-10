@@ -80,7 +80,7 @@ handler.post(
 
     // Find matching urls in db
     // https://docs.mongodb.com/drivers/node/usage-examples/find
-    let cursor: Cursor<UrlDbObjectType>;
+    let cursor: Cursor<UrlDbObjectType> | undefined;
     try {
       const filter = { [field]: query };
       const options = { sort: { date: -1 } };
@@ -120,6 +120,10 @@ handler.delete(
   async (req: AdminRequest, res: NextApiResponse, _next: NextHandler) => {
     const { codes }: DeleteRequestBody = req.body;
     const { session } = req;
+
+    if (!session) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
 
     if (!codes.length) {
       return res
@@ -175,7 +179,7 @@ handler.delete(
     }
 
     // Flag any that need it
-    let flagResult: UpdateWriteOpResult;
+    let flagResult: UpdateWriteOpResult | undefined;
     if (flagCodes.length) {
       try {
         flagResult = await Url.updateMany(
@@ -200,7 +204,7 @@ handler.delete(
     }
 
     // Delete any that need it
-    let delResult: DeleteWriteOpResultObject;
+    let delResult: DeleteWriteOpResultObject | undefined;
     if (delCodes.length) {
       try {
         delResult = await Url.deleteMany({ code: { $in: delCodes } });

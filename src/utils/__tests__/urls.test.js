@@ -19,7 +19,9 @@ jest.mock('shortid', () => ({
   generate: jest.fn(() => 'abcdefg'),
 }));
 jest.mock('random-words', () =>
-  jest.fn((numWords) => ['one', 'two', 'three'].slice(0, numWords))
+  jest.fn(({ exactly, join }) =>
+    ['one', 'two', 'three'].slice(0, exactly).join(join)
+  )
 );
 
 beforeEach(() => {
@@ -49,7 +51,7 @@ describe('generateRandomCode util function', () => {
   it('returns 2-word code by default', async () => {
     const randomCode = await generateRandomCode(mockDbCollection);
     expect(randomWords).toBeCalledTimes(1);
-    expect(randomWords).toBeCalledWith(2);
+    expect(randomWords).toBeCalledWith({ exactly: 2, join: '' });
     expect(mockDbCollection.findOne).toBeCalledTimes(1);
     expect(randomCode).toBe('onetwo');
   });
@@ -64,7 +66,7 @@ describe('generateRandomCode util function', () => {
   it('returns n-word code as specified', async () => {
     const randomCode = await generateRandomCode(mockDbCollection, true, 3);
     expect(randomWords).toBeCalledTimes(1);
-    expect(randomWords).toBeCalledWith(3);
+    expect(randomWords).toBeCalledWith({ exactly: 3, join: '' });
     expect(mockDbCollection.findOne).toBeCalledTimes(1);
     expect(randomCode).toBe('onetwothree');
   });

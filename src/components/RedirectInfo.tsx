@@ -52,7 +52,7 @@ const RedirectInfo: React.FC<Props> = ({ url }) => {
     <div>
       <div className="container">
         <h1>/{url.code} </h1>
-        {url.expiration && (
+        {expirationMs && (
           <p className="expiration">
             <IoMdStopwatch className="timer" />
             <span>Expires in {formatTime(expirationMs)}</span>

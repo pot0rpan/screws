@@ -1,14 +1,23 @@
-import { useReducer, useEffect, Reducer, useRef } from 'react';
+import {
+  useReducer,
+  useEffect,
+  Reducer,
+  useRef,
+  MutableRefObject,
+} from 'react';
 
 import { validate, ValidatorType } from '../../utils/validators';
 
-const inputReducer = (state: InputStateType, action: InputActionType) => {
+const inputReducer = (
+  state: InputStateType,
+  action: InputActionType
+): InputStateType => {
   switch (action.type) {
     case 'CHANGE':
       return {
         ...state,
-        value: action.val,
-        isValid: validate(action.val, action.validators),
+        value: action.val || '',
+        isValid: validate(action.val || '', action.validators || []),
       };
     case 'TOUCH':
       return {
@@ -68,7 +77,7 @@ const Input: React.FC<Props> = ({
     isValid: initialValidity || false,
     isTouched: false,
   });
-  const inputRef = useRef(null!);
+  const inputRef = useRef<HTMLInputElement | HTMLSelectElement>(null!);
 
   const { value, isValid } = inputState;
 
@@ -107,7 +116,7 @@ const Input: React.FC<Props> = ({
           onChange={changeHandler}
           value={inputState.value}
           onBlur={touchHandler}
-          ref={inputRef}
+          ref={inputRef as MutableRefObject<HTMLInputElement>}
           autoFocus={autoFocus}
           {...inputAttributes}
         />
@@ -162,7 +171,7 @@ const Input: React.FC<Props> = ({
         </style>
       </div>
     );
-  } else if (element === 'select' && options.length) {
+  } else if (element === 'select' && options?.length) {
     return (
       <div className="input">
         <label htmlFor={id}>{label}</label>
@@ -170,7 +179,7 @@ const Input: React.FC<Props> = ({
           id={id}
           name={id}
           onChange={changeHandler}
-          ref={inputRef}
+          ref={inputRef as MutableRefObject<HTMLSelectElement>}
           autoFocus={autoFocus}
           defaultValue={initialValue}
         >

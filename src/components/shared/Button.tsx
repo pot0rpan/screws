@@ -10,7 +10,7 @@ const Button: React.FC<Props> = ({
   ...buttonAttributes
 }) => {
   return (
-    <button {...buttonAttributes} className={primary && 'primary'}>
+    <button {...buttonAttributes} className={primary ? 'primary' : ''}>
       {children}
       <style jsx>
         {`

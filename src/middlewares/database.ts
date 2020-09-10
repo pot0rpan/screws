@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect, { RequestHandler } from 'next-connect';
 import { MongoClient, Db } from 'mongodb';
 
-const client = new MongoClient(process.env.DB_CONNECTION_STRING, {
+const client = new MongoClient(process.env.DB_CONNECTION_STRING || '', {
   useUnifiedTopology: true,
 });
 

@@ -18,17 +18,21 @@ const AdminPage: NextPage = () => {
       }
     : null;
 
+  const handleLogin = () => {
+    signIn();
+  };
+
   return (
     <Layout title="/admin">
       <div className="container">
         {loading ? (
           <LoadingSpinner asOverlay />
-        ) : session ? (
+        ) : fixedUser ? (
           <Dashboard user={fixedUser} signOut={signOut} />
         ) : (
           <div id="login">
             <h2>Please log in first</h2>
-            <Button onClick={signIn}>Log in</Button>
+            <Button onClick={handleLogin}>Log in</Button>
           </div>
         )}
       </div>
