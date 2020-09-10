@@ -10,8 +10,8 @@ const Footer: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link href="/unscrew">
-            <a>Unscrew</a>
+          <Link href="/tools">
+            <a>Tools</a>
           </Link>
         </li>
         <li>

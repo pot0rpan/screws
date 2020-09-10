@@ -7,6 +7,7 @@ describe('Footer component', () => {
     const { getByText } = render(<Footer />);
 
     expect(getByText(/home/i)).toHaveAttribute('href', '/');
+    expect(getByText(/tools/i)).toHaveAttribute('href', '/tools');
     expect(getByText(/about/i)).toHaveAttribute('href', '/about');
     expect(getByText(/support/i)).toHaveAttribute(
       'href',

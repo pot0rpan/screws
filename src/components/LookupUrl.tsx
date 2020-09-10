@@ -67,6 +67,7 @@ const UnscrewUrl: React.FC = () => {
           inputMode="url"
           autoCorrect="off"
           autoCapitalize="none"
+          autoFocus
         />
 
         {error ? <small>{error}</small> : null}
@@ -126,6 +127,8 @@ const UnscrewUrl: React.FC = () => {
             padding: 0 1rem;
           }
           .lookup h2 {
+            margin-left: 1rem;
+            margin-right: 1rem;
             text-align: center;
           }
           .lookup form {

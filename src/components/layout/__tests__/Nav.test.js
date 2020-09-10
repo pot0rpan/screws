@@ -7,6 +7,7 @@ describe('Nav component', () => {
     const { getByAltText, getByText } = render(<Nav />);
 
     expect(getByAltText(/logo/i).parentElement).toHaveAttribute('href', '/');
+    expect(getByText(/tools/i)).toHaveAttribute('href', '/tools');
     expect(getByText(/about/i)).toHaveAttribute('href', '/about');
   });
 });

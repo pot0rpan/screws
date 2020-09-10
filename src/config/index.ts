@@ -18,6 +18,7 @@ export const RESERVED_CODES = [
   'index',
   'screws',
   'support',
+  'tools',
   'unscrew',
 ];
 

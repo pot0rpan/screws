@@ -13,8 +13,8 @@ const Nav: React.FC = () => {
         </Link>
         <ul>
           <li>
-            <Link href="/unscrew">
-              <a>Unscrew</a>
+            <Link href="/tools">
+              <a>Tools</a>
             </Link>
           </li>
           <li>
