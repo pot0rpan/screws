@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
+    "dev": "next dev",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx}'",
     "start": "next start",
     "test": "jest"
   },
@@ -42,6 +43,7 @@
     "@types/shortid": "0.0.29",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
+    "prettier": "^2.1.2",
     "typescript": "^3.9.6"
   }
 }
