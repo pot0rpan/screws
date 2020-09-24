@@ -59,7 +59,7 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
     (code
       ? validate(code, [
           VALIDATOR_MINLENGTH(4),
-          VALIDATOR_MAXLENGTH(24),
+          VALIDATOR_MAXLENGTH(32),
           VALIDATOR_SAFECODE(),
         ])
       : true) &&
