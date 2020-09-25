@@ -1,16 +1,23 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import rateLimit from 'express-rate-limit';
 import ogs from 'open-graph-scraper';
 
-import { PreviewDataType } from '../../../types/url';
+import type { PreviewDataType } from '../../../types/url';
 import { BASE_URL } from '../../../config';
-import { defaultRateLimitOptions } from '../../../config/rate-limit';
+import { defaultRateLimitOptions, maxFn } from '../../../config/rate-limit';
 import { promiseTimeout } from '../../../utils';
 import { validate, VALIDATOR_URL } from '../../../utils/validators';
+import dbMiddleware from '../../../middlewares/database';
 
 const handler = nextConnect();
-const limiter = rateLimit(defaultRateLimitOptions);
+const limiter = rateLimit({
+  ...defaultRateLimitOptions,
+  // Different max if API key is provided
+  max: maxFn as rateLimit.MaxValueFn,
+});
+
+handler.use(dbMiddleware);
 handler.use(limiter);
 
 export interface UnscrewUrlResponse {

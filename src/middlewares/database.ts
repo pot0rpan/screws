@@ -18,7 +18,7 @@ const database: RequestHandler<DatabaseRequest, NextApiResponse> = async (
 ) => {
   if (!client.isConnected()) await client.connect();
   req.dbClient = client;
-  req.db = client.db(process.env.DB_NAME);
+  req.db = client.db();
   return next();
 };
 

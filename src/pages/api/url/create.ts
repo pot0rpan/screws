@@ -1,10 +1,10 @@
 // https://developer.mongodb.com/how-to/nextjs-building-modern-applications
-import { NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
+import type { Collection } from 'mongodb';
 import nextConnect from 'next-connect';
 import bcrypt from 'bcryptjs';
 import ogs from 'open-graph-scraper';
 import rateLimit from 'express-rate-limit';
-import { Collection } from 'mongodb';
 
 import {
   UrlCreationObjectType,
@@ -13,10 +13,8 @@ import {
   UrlClientObjectType,
 } from '../../../types/url';
 import { URL_COLLECTION_NAME, USE_FULL_WORDS } from '../../../config';
-import { defaultRateLimitOptions } from '../../../config/rate-limit';
-import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
+import { defaultRateLimitOptions, maxFn } from '../../../config/rate-limit';
 import { MILLISECONDS_PER_HOUR } from '../../../utils/time';
-import { expirationOptions } from '../../../components/CreateUrl';
 import {
   validate,
   VALIDATOR_URL,
@@ -29,10 +27,15 @@ import {
   generateRandomCode,
   isReservedCode,
 } from '../../../utils/urls';
+import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
+import { expirationOptions } from '../../../components/CreateUrl';
 
 const handler = nextConnect();
-
-const limiter = rateLimit(defaultRateLimitOptions);
+const limiter = rateLimit({
+  ...defaultRateLimitOptions,
+  // Different max if API key is provided
+  max: maxFn as rateLimit.MaxValueFn,
+});
 
 handler.use(dbMiddleware);
 handler.use(limiter);

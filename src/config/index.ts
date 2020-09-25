@@ -1,8 +1,10 @@
 // Used for default/base page <title>
 export const WEBSITE_NAME = 'Screws';
 
-// "Table" name to store URLs in
+// "Table" names to store stuff in
 export const URL_COLLECTION_NAME = process.env.URL_COLLECTION_NAME || 'urls';
+export const APIKEY_COLLECTION_NAME =
+  process.env.APIKEY_COLLECTION_NAME || 'access_keys';
 
 // Use full words or characters for random code generation
 export const USE_FULL_WORDS = true;
