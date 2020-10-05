@@ -5,7 +5,6 @@ import {
   addUrlProtocolIfMissing,
   isReservedCode,
   generateRandomCode,
-  getTrackingParamData,
 } from '../urls';
 
 // Mock `findOne` to never find existing urls
@@ -69,48 +68,5 @@ describe('generateRandomCode util function', () => {
     expect(randomWords).toBeCalledWith({ exactly: 3, join: '' });
     expect(mockDbCollection.findOne).toBeCalledTimes(1);
     expect(randomCode).toBe('onetwothree');
-  });
-});
-
-describe('getTrackingParamData util function', () => {
-  const defaultUrl = 'https://example.com';
-
-  it('returns basic data if no tracking params in provided url', () => {
-    let cleanUrl = defaultUrl;
-    let trackingData = getTrackingParamData(cleanUrl);
-    expect(trackingData.url).toBe(cleanUrl);
-    expect(trackingData.isDirty).toBe(false);
-    expect(trackingData.trackingParams.length).toBe(0);
-    expect(trackingData.cleanUrl).toBe(cleanUrl);
-
-    cleanUrl = `${defaultUrl}/test/`;
-    trackingData = getTrackingParamData(cleanUrl);
-    expect(trackingData.url).toBe(cleanUrl);
-    expect(trackingData.isDirty).toBe(false);
-    expect(trackingData.trackingParams.length).toBe(0);
-    expect(trackingData.cleanUrl).toBe(cleanUrl);
-  });
-
-  it('returns basic data along with clean url and tracking params if in provided url', () => {
-    let dirtyUrl = `${defaultUrl}/?utm_medium=test&ok=ok`;
-    let trackingData = getTrackingParamData(dirtyUrl);
-    expect(trackingData.url).toBe(dirtyUrl);
-    expect(trackingData.isDirty).toBe(true);
-    expect(trackingData.trackingParams.length).toBe(1);
-    expect(trackingData.cleanUrl).toBe(`${defaultUrl}/?ok=ok`);
-
-    dirtyUrl = `${defaultUrl}/test/?utm_term=test&ok=ok`;
-    trackingData = getTrackingParamData(dirtyUrl);
-    expect(trackingData.url).toBe(dirtyUrl);
-    expect(trackingData.isDirty).toBe(true);
-    expect(trackingData.trackingParams.length).toBe(1);
-    expect(trackingData.cleanUrl).toBe(`${defaultUrl}/test/?ok=ok`);
-
-    dirtyUrl = `${defaultUrl}/test?fbclid=test&ok=ok`;
-    trackingData = getTrackingParamData(dirtyUrl);
-    expect(trackingData.url).toBe(dirtyUrl);
-    expect(trackingData.isDirty).toBe(true);
-    expect(trackingData.trackingParams.length).toBe(1);
-    expect(trackingData.cleanUrl).toBe(`${defaultUrl}/test?ok=ok`);
   });
 });
