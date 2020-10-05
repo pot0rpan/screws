@@ -3,7 +3,7 @@ import randomWords from 'random-words';
 import shortId from 'shortid';
 
 import { UrlDbObjectType } from '../types/url';
-import { RESERVED_CODES, TRACKING_PARAMS } from '../config';
+import { RESERVED_CODES } from '../config';
 
 // https://www.regextester.com/96146
 // Modified to allow single char SLD and up to 12 char TLD
@@ -45,41 +45,4 @@ export const generateRandomCode = async (
   return isDuplicate
     ? generateRandomCode(Collection, useFullWords, ++numWords)
     : code;
-};
-
-type ParamsType = { key: string; value: string };
-
-type UrlTrackingDataType = {
-  url: string;
-  isDirty: boolean;
-  trackingParams: ParamsType[];
-  cleanUrl: string;
-};
-
-export const getTrackingParamData = (dirtyUrl: string) => {
-  const urlObj = new URL(dirtyUrl);
-
-  const urlData: UrlTrackingDataType = {
-    url: dirtyUrl,
-    isDirty: false,
-    trackingParams: [],
-    cleanUrl: dirtyUrl,
-  };
-
-  // If bad params are found, mark url as dirty,
-  // add trackingParams entry, and set cleanUrl
-  // as url with that param removed
-  TRACKING_PARAMS.forEach((badParam) => {
-    if (urlObj.searchParams.has(badParam)) {
-      urlData.isDirty = true;
-      urlData.trackingParams.push({
-        key: badParam,
-        value: urlObj.searchParams.get(badParam) || '',
-      });
-      urlObj.searchParams.delete(badParam);
-      urlData.cleanUrl = urlObj.href;
-    }
-  });
-
-  return urlData;
 };

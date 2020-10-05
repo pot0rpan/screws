@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { getTrackingData } from 'tracking-params';
 
-import { addUrlProtocolIfMissing, getTrackingParamData } from '../utils/urls';
+import { addUrlProtocolIfMissing } from '../utils/urls';
 import { VALIDATOR_URL, validate } from '../utils/validators';
 import { useForm } from '../hooks/form-hook';
 import Input from './shared/Input';
@@ -24,7 +25,7 @@ const CleanUrl: React.FC = () => {
     const url = addUrlProtocolIfMissing(formState.inputs.url.value);
     if (!validate(url, [VALIDATOR_URL()])) return;
 
-    const urlIsDirty = getTrackingParamData(url).isDirty;
+    const urlIsDirty = getTrackingData(url).isDirty;
     setCurrentValidUrl(url);
     setIsDirty(urlIsDirty);
   }, [formState.inputs.url.value]);

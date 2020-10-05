@@ -24,18 +24,6 @@ export const RESERVED_CODES = [
   'unscrew',
 ];
 
-// Query parameters to warn user about on /[code] page
-export const TRACKING_PARAMS = [
-  'utm_source',
-  'utm_medium',
-  'utm_campaign',
-  'utm_term',
-  'utm_content',
-  'utm_brand',
-  'utm_name',
-  'fbclid',
-];
-
 // Threshold before deletion is done on flagged URLs
 // Example: Once a URL is flagged for deletion a second time
 // by a different user, it gets deleted instead of flagged

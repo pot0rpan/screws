@@ -1,5 +1,6 @@
+import { getTrackingData } from 'tracking-params';
+
 import { WEBSITE_NAME } from '../config';
-import { getTrackingParamData } from '../utils/urls';
 import List from './shared/List';
 import Button from './shared/Button';
 
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const TrackingParams: React.FC<Props> = ({ url }) => {
-  const trackingData = getTrackingParamData(url);
+  const trackingData = getTrackingData(url);
   const numParams = trackingData.trackingParams.length;
 
   return trackingData.isDirty && numParams > 0 ? (
