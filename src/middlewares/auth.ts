@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect, { RequestHandler } from 'next-connect';
-import { getSession } from 'next-auth/client';
-
-import { SessionType } from '../types/auth';
+import { Session, getSession } from 'next-auth/client';
 
 export interface AuthSessionRequest extends NextApiRequest {
-  session: SessionType;
+  session: Session;
 }
 
 const auth: RequestHandler<AuthSessionRequest, NextApiResponse> = async (
@@ -13,7 +11,7 @@ const auth: RequestHandler<AuthSessionRequest, NextApiResponse> = async (
   res,
   next
 ) => {
-  const session: SessionType = await getSession({ req });
+  const session = await getSession({ req });
 
   if (!session) {
     return res.status(403).json({ message: 'Not authorized' });

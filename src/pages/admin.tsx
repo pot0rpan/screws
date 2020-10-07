@@ -1,14 +1,14 @@
 import { NextPage } from 'next';
 import { signIn, signOut, useSession } from 'next-auth/client';
 
-import { SessionType, AdminUserType } from '../types/auth';
+import { AdminUserType } from '../types/auth';
 import Layout from '../components/layout/Layout';
 import Button from '../components/shared/Button';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
 import Dashboard from '../components/admin/Dashboard';
 
 const AdminPage: NextPage = () => {
-  const [session, loading]: [SessionType, boolean] = useSession();
+  const [session, loading] = useSession();
 
   const fixedUser: AdminUserType | null = session?.user
     ? {
