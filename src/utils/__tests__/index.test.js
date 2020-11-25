@@ -1,4 +1,8 @@
-import { stringIncludesSubstring, promiseTimeout } from '../index';
+import {
+  stringIncludesSubstring,
+  promiseTimeout,
+  blockingDisableReactDevTools,
+} from '../index';
 
 describe('stringIncludesSubstring util function', () => {
   it('returns true or false based on whether substring(s) found', () => {
@@ -48,5 +52,26 @@ describe('promiseTimeout util function', () => {
     } catch (err) {}
 
     expect(response).toBeUndefined();
+  });
+});
+
+describe('blockingDisableReactDevTools util function', () => {
+  it('disables React devtools', () => {
+    const mockDevToolsHook = {
+      obj: {
+        key: 'value',
+      },
+      fn: () => false,
+    };
+
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = mockDevToolsHook;
+
+    eval(blockingDisableReactDevTools);
+
+    const cleanedHook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+    expect(cleanedHook.obj).toBeNull();
+    expect(cleanedHook.fn()).toBeUndefined();
+
+    delete window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
   });
 });

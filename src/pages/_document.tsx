@@ -6,6 +6,8 @@ import Document, {
   NextScript,
 } from 'next/document';
 
+import { blockingDisableReactDevTools } from '../utils';
+
 class CustomDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
@@ -43,6 +45,13 @@ class CustomDocument extends Document {
           <meta name="theme-color" content="#00e2bc" />
         </Head>
         <body>
+          {process.env.NODE_ENV === 'production' ? (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: blockingDisableReactDevTools,
+              }}
+            ></script>
+          ) : null}
           <Main />
           <NextScript />
         </body>
