@@ -19,7 +19,6 @@ class CustomDocument extends Document {
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="manifest" href="/site.webmanifest" />
           <link
             rel="apple-touch-icon"

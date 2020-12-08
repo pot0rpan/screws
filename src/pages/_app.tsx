@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useState, useEffect } from 'react';
 
 import { UrlClientObjectType } from '../types/url';
@@ -39,8 +40,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <UrlsContext.Provider value={{ urls: storedUrls, addUrl, removeUrl }}>
-      <Component {...pageProps} />
-    </UrlsContext.Provider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <UrlsContext.Provider value={{ urls: storedUrls, addUrl, removeUrl }}>
+        <Component {...pageProps} />
+      </UrlsContext.Provider>
+    </>
   );
 }
