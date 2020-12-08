@@ -1,10 +1,12 @@
 import Layout from '../components/layout/Layout';
 import CreateUrl from '../components/CreateUrl';
 
-export default () => {
+const IndexPage = () => {
   return (
     <Layout>
       <CreateUrl />
     </Layout>
   );
 };
+
+export default IndexPage;
