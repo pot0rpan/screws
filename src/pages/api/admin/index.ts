@@ -121,7 +121,7 @@ handler.delete(
     const { codes }: DeleteRequestBody = req.body;
     const { session } = req;
 
-    if (!session) {
+    if (!session?.user.email) {
       return res.status(403).json({ message: 'Not authorized' });
     }
 

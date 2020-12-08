@@ -12,9 +12,9 @@ const AdminPage: NextPage = () => {
 
   const fixedUser: AdminUserType | null = session?.user
     ? {
-        name: session.user.name,
-        discriminator: session.user.email,
-        image: session.user.image,
+        name: session.user.name || '',
+        discriminator: session.user.email || '',
+        image: session.user.image || '',
       }
     : null;
 
