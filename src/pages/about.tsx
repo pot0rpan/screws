@@ -136,7 +136,7 @@ const About: NextPage = () => {
 
         <section className="github">
           <a href="#github">
-            <h2>Souce Code</h2>
+            <h2>Source Code</h2>
           </a>
           <p>
             The full source code for this website is{' '}
