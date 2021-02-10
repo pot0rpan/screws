@@ -41,3 +41,16 @@ export const BASE_URL =
   baseUrl.startsWith('http://') || baseUrl.startsWith('https://')
     ? baseUrl
     : `https://${baseUrl}`;
+
+//! Bandaid? Maybe move this to db in future
+export const BLOCKED_DOMAINS = [
+  'meetonlyhot.com',
+  'free-hookup.xyz',
+  'service-paypal.freesite.vip',
+  '18plusstream.net',
+  'datevipfinder.com',
+  'slutymilf.net',
+  'voicemmssfr.moonfruit.com',
+  'secur-cagricole.firebaseapp.com',
+  'free-hookup.xyz',
+];

@@ -26,6 +26,7 @@ import {
   addUrlProtocolIfMissing,
   generateRandomCode,
   isReservedCode,
+  isBlockedUrl,
 } from '../../../utils/urls';
 import dbMiddleware, { DatabaseRequest } from '../../../middlewares/database';
 import { expirationOptions } from '../../../components/CreateUrl';
@@ -109,6 +110,11 @@ handler.post(async (req: DatabaseRequest, res: NextApiResponse) => {
   // Make sure code is not a reserved route
   if (isReservedCode(code)) {
     return res.status(402).json({ message: 'URL code is already taken' });
+  }
+
+  // Make sure domain isn't on block list
+  if (isBlockedUrl(longUrl)) {
+    return res.status(422).json({ message: 'Domain not allowed' });
   }
 
   // Hash password if supplied

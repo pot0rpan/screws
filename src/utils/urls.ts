@@ -3,7 +3,7 @@ import randomWords from 'random-words';
 import shortId from 'shortid';
 
 import { UrlDbObjectType } from '../types/url';
-import { RESERVED_CODES } from '../config';
+import { RESERVED_CODES, BLOCKED_DOMAINS } from '../config';
 
 // https://www.regextester.com/96146
 // Modified to allow single char SLD and up to 12 char TLD
@@ -20,6 +20,13 @@ export const isReservedCode = (code: string) =>
       isReserved && code.toLowerCase() !== reservedCode,
     true
   );
+
+export const isBlockedUrl = (url: string) => {
+  for (const domain of BLOCKED_DOMAINS) {
+    if (url.toLowerCase().includes(domain)) return true;
+  }
+  return false;
+};
 
 //! : (Collection: Collection) => string
 export const generateRandomCode = async (

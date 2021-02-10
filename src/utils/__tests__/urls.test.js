@@ -5,6 +5,7 @@ import {
   addUrlProtocolIfMissing,
   isReservedCode,
   generateRandomCode,
+  isBlockedUrl,
 } from '../urls';
 
 // Mock `findOne` to never find existing urls
@@ -68,5 +69,12 @@ describe('generateRandomCode util function', () => {
     expect(randomWords).toBeCalledWith({ exactly: 3, join: '' });
     expect(mockDbCollection.findOne).toBeCalledTimes(1);
     expect(randomCode).toBe('onetwothree');
+  });
+});
+
+describe('isBlockedUrl util function', () => {
+  it('returns true or false based on whether the URL is on the block list', () => {
+    expect(isBlockedUrl('https://service-paypal.freesite.vip/bad')).toBe(true);
+    expect(isBlockedUrl('https://google.com/ok')).toBe(false);
   });
 });
