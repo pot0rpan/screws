@@ -43,6 +43,7 @@ export const BASE_URL =
     : `https://${baseUrl}`;
 
 //! Bandaid? Maybe move this to db in future
+// Have urls deleted by mods added to the list
 export const BLOCKED_DOMAINS = [
   'meetonlyhot.com',
   'free-hookup.xyz',
@@ -53,4 +54,5 @@ export const BLOCKED_DOMAINS = [
   'voicemmssfr.moonfruit.com',
   'secur-cagricole.firebaseapp.com',
   'free-hookup.xyz',
+  'zvof74.wixsite.com',
 ];
