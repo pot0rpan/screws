@@ -51,7 +51,7 @@ const formReducer = (
 ): FormStateType => {
   switch (action.type) {
     case 'INPUT_CHANGE':
-      if (!action.inputId || !action.value) return state;
+      if (!action.inputId || typeof action.value === 'undefined') return state;
 
       let formIsValid = true;
       for (const inputId in state.inputs) {
