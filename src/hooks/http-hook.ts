@@ -10,7 +10,7 @@ export const useHttpClient = () => {
     async <T = any>(
       url: string,
       method: string = 'GET',
-      body = null,
+      body: string | null = null,
       headers = {}
     ): Promise<T> => {
       setIsLoading(true);
