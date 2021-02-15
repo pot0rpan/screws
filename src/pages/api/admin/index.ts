@@ -152,8 +152,8 @@ handler.delete(
 
     // Determine which urls to flag and which to delete
     const user = session.user.email;
-    const flagCodes = [];
-    const delCodes = [];
+    const flagCodes: string[] = [];
+    const delCodes: string[] = [];
 
     for (let url of foundUrls) {
       // URL already has a flag
@@ -195,10 +195,16 @@ handler.delete(
       }
 
       const flagCount = flagResult.modifiedCount;
+      const urlsToLog = foundUrls
+        .filter((u) => flagCodes.includes(u.code))
+        .map(formatUrlForLogs);
       Logger.log(
         `${session.user.name} flagged ${flagCount} URL${
           flagCount === 1 ? '' : 's'
-        }`,
+        }` +
+          '\n```' +
+          urlsToLog.join('\n') +
+          '```',
         'Admin Activity'
       );
     }
@@ -215,10 +221,16 @@ handler.delete(
       }
 
       const delCount = delResult.deletedCount;
+      const urlsToLog = foundUrls
+        .filter((u) => delCodes.includes(u.code))
+        .map(formatUrlForLogs);
       Logger.log(
         `${session.user.name} deleted ${delCount} URL${
           delCount === 1 ? '' : 's'
-        }`,
+        }` +
+          '\n```' +
+          urlsToLog.join('\n') +
+          '```',
         'Admin Activity'
       );
     }
@@ -232,5 +244,9 @@ handler.delete(
     return res.json(response);
   }
 );
+
+function formatUrlForLogs(url: UrlDbObjectType): string {
+  return `/${url.code}  ${url.longUrl}`;
+}
 
 export default handler;
