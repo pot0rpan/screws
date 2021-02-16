@@ -16,45 +16,49 @@ interface UrlResponseType {
   passwordRequired?: boolean;
 }
 
-export const getServerSideProps: GetServerSideProps<Props | {}> = async (
-  ctx
-) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const code = ctx.query.code as string;
   const skipConfirmation = cookies(ctx)[COOKIE_SKIP_REDIRECT_CONFIRMATION];
   let url: UrlClientObjectType | null = null;
   let passwordRequired: boolean = false;
 
-  if (code) {
-    try {
-      const res = await fetch(`${BASE_URL}/api/url/${code}`);
-      const data: UrlResponseType = await res.json();
+  if (!code) {
+    return { notFound: true };
+  }
 
-      if (res.status === 401 || data.passwordRequired) {
-        passwordRequired = true;
-      } else if (data.url) {
-        url = data.url;
-      } else {
-        ctx.res && (ctx.res.statusCode = res.status);
-      }
-    } catch (err) {
-      console.log('/[code] getServerSideProps catch(err):\n', err);
+  try {
+    const res = await fetch(`${BASE_URL}/api/url/${code}`);
+    const data: UrlResponseType = await res.json();
+
+    if (res.status === 401 || data.passwordRequired) {
+      passwordRequired = true;
+    } else if (data.url) {
+      url = data.url;
+    } else {
+      ctx.res && (ctx.res.statusCode = res.status);
     }
+  } catch (err) {
+    console.error('/[code] getServerSideProps catch(err):\n', err);
+  }
+
+  if (!url && !passwordRequired) {
+    return {
+      notFound: true,
+    };
   }
 
   // Redirect without showing confirmation page
   if (
-    !passwordRequired &&
     url &&
-    skipConfirmation &&
-    !stringIncludesSubstring(url.longUrl, SECRET_URLS)
+    !passwordRequired &&
+    (skipConfirmation || stringIncludesSubstring(url.longUrl, SECRET_URLS))
   ) {
-    const { res } = ctx;
-    if (res) {
-      res.setHeader('Location', url.longUrl);
-      res.statusCode = 302;
-      res.end();
-      return { props: {} };
-    }
+    return {
+      redirect: {
+        destination: url.longUrl,
+        permanent: false,
+      },
+    };
   }
 
   return {
@@ -73,30 +77,24 @@ interface Props {
 }
 
 const Page: NextPage<Props> = ({ code, url, passwordRequired }) => {
-  if (url) {
-    const isSecretUrl = stringIncludesSubstring(url.longUrl, SECRET_URLS);
-
-    return (
-      <Layout
-        title={`/${code}`}
-        description={
-          isSecretUrl
-            ? undefined
-            : `Landing page for redirect to ${url.longUrl}`
-        }
-        ogImage={isSecretUrl ? undefined : url.preview?.image?.url}
-        ogUrl={isSecretUrl ? undefined : `${BASE_URL}/${url.code}`}
-      >
-        <RedirectInfo url={url} />
-      </Layout>
-    );
-  } else if (passwordRequired) {
+  if (passwordRequired) {
     return (
       <Layout
         title={`/${code}`}
         description="Password is required to access this content."
       >
         <AuthorizeUrl code={code} />
+      </Layout>
+    );
+  } else if (url) {
+    return (
+      <Layout
+        title={`/${code}`}
+        description={`Landing page for redirect to ${url.longUrl}`}
+        ogImage={url.preview?.image?.url}
+        ogUrl={`${BASE_URL}/${url.code}`}
+      >
+        <RedirectInfo url={url} />
       </Layout>
     );
   } else {
