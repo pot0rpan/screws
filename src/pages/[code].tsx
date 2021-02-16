@@ -1,4 +1,4 @@
-import { NextPageContext, NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import cookies from 'next-cookies';
 
 import { UrlClientObjectType } from '../types/url';
@@ -16,8 +16,10 @@ interface UrlResponseType {
   passwordRequired?: boolean;
 }
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  const { code } = ctx.query;
+export const getServerSideProps: GetServerSideProps<Props | {}> = async (
+  ctx
+) => {
+  const code = ctx.query.code as string;
   const skipConfirmation = cookies(ctx)[COOKIE_SKIP_REDIRECT_CONFIRMATION];
   let url: UrlClientObjectType | null = null;
   let passwordRequired: boolean = false;
@@ -47,11 +49,12 @@ export async function getServerSideProps(ctx: NextPageContext) {
     !stringIncludesSubstring(url.longUrl, SECRET_URLS)
   ) {
     const { res } = ctx;
-    if (!res) return;
-
-    res.setHeader('location', url.longUrl);
-    res.statusCode = 302;
-    return res.end();
+    if (res) {
+      res.setHeader('Location', url.longUrl);
+      res.statusCode = 302;
+      res.end();
+      return { props: {} };
+    }
   }
 
   return {
@@ -61,7 +64,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
       passwordRequired,
     },
   };
-}
+};
 
 interface Props {
   code: string;
